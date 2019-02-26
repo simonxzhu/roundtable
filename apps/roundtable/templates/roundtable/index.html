@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'roundtable/css/bootstrap.min.css' %}">
+</head>
+<body>
+<div class="container pt-5">
+    <div class="h1 mb-5">Welcome! Sign in to manage your jobs!</div>
+    <div class="row justify-content-between">
+        <div class="col-5">
+            <div class=" h2 mb-5">Registration</div>
+            <form action="/process_register" method="POST">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="firstN" class="col-sm-4">First name:</label>
+                    <input type="text" class="form-control col-sm-8" id="firstN" name="first_name">
+                    {% if messages %}
+                        <div class="messages offset-4 text-danger">
+                            {% for message in messages %}
+                                {% if message.tags == 'first_name error' %}
+                                    <small>{{ message }}</small>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group row mt-3">
+                    <label for="firstN" class="col-sm-4">Last name:</label>
+                    <input type="text" class="form-control col-sm-8" id="lastN" name="last_name">
+                    {% if messages %}
+                        <div class="messages offset-4 text-danger">
+                            {% for message in messages %}
+                                {% if message.tags == 'last_name error' %}
+                                    <small>{{ message }}</small>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group row mt-3">
+                    <label for="email" class="col-sm-4">Email:</label>
+                    <input type="text" class="form-control col-sm-8" id="email" name="email">
+                    {% if messages %}
+                        <div class="messages offset-4 text-danger">
+                            {% for message in messages %}
+                                {% if message.tags == 'email error' %}
+                                    <small>{{ message }}</small>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group row mt-3">
+                    <label for="password" class="col-sm-4">Password</label>
+                    <input type="password" class="form-control col-sm-8" id="password" name="password">
+                    {% if messages %}
+                        <div class="messages offset-4 text-danger">
+                            {% for message in messages %}
+                                {% if message.tags == 'password error' %}
+                                    <small>{{ message }}</small>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </div>
+                <div class="form-group row mt-3">
+                    <label for="c_password" class="col-sm-4">Confirm PW:</label>
+                    <input type="password" class="form-control col-sm-8" id="c_password" name="c_password">
+                    {% if messages %}
+                        <div class="messages offset-4 text-danger">
+                            {% for message in messages %}
+                                {% if message.tags == 'c_password error' %}
+                                    <small>{{ message }}</small>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    {% endif %}
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Register!</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-5">
+            <div class="h2 mb-5">Login</div>
+            <form action="/process_login" method="POST">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="login_email" class="col-sm-4">Email:</label>
+                    <input type="text" class="form-control col-sm-8" id="login_email" name="login_email">
+                </div>
+                <div class="form-group row">
+                    <label for="login_password" class="col-sm-4">Password</label>
+                    <input type="password" class="form-control col-sm-8" id="login_password" name="login_password">
+                    {% if messages %}
+                        <div class="messages offset-4 text-danger">
+                            {% for message in messages %}
+                                {% if message.tags == 'login error' %}
+                                    <small>{{ message }}</small>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+
+                    {% endif %}
+                </div>
+                <div class="text-center">
+                    <button type="submit" class="btn btn-primary">Log In</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Create</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'roundtable/css/bootstrap.min.css' %}">
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <a class="navbar-brand" href="/dashboard">Home</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item mr-4">
+                <a class="nav-link" href="#">Hello {{ user.first_name }} !</a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" href="/process_logout">Log out</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+<div class="container mt-5">
+    <div class="row d-flex justify-content-between">
+        <div class="col-8">
+            <form action="/process_addjob" method="post" id="new_job">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="title" class="col-sm-3 col-form-label">Title</label>
+                    {% if messages %}
+                        <div class="messages text-danger d-inline-block ml-2">
+                            {% for message in messages %}
+                                {% if message.tags == 'title error' %}
+                                    <small>{{ message }}</small>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="title" name="title">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <form>
+                        <label for="location" class="col-sm-3 col-form-label">Location</label>
+                        {% if messages %}
+                            <div class="messages text-danger d-inline-block ml-2">
+                                {% for message in messages %}
+                                    {% if message.tags == 'location error' %}
+                                        <small>{{ message }}</small>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="location" name="location">
+                            <a href="#" class="float-right mt-2">Search</a>
+                        </div>
+                    </form>
+                </div>
+                <div class="bg-info p-5"
+                     style="background-image: url('../../static/roundtable/img/map.png'); background-size:contain">
+                </div>
+                <a href="https://www.yelp.com/" target="_blank" role="button" class="btn btn-danger mt-3">Add
+                    restaurant</a>
+                <div class="form-group row mt-3">
+                    <label for="comment" class="col-sm-3 col-form-label">Comment</label>
+                    <div class="col-sm-9">
+                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary float-right">Publish</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
