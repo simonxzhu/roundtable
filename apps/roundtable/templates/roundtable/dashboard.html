@@ -44,7 +44,7 @@
             </thead>
             <tbody>
             {% for event in events %}
-                    <tr>
+                    <tr style="background-image: url({{event.restaurants.first.image_url}})">
                         <td>{{ event.title }}</td>
                         <td>{{ event.location }}</td>
                         <td>

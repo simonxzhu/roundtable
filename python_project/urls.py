@@ -21,13 +21,3 @@ urlpatterns = [
     url(r'^', include('apps.roundtable.urls')),
 
 ]
-
-#
-# urlpatterns = [
-#     url(r'^', include('apps.application.urls')),
-#     url(r'^login/', include('apps.login.urls')),
-#     url(r'^wall/', include('apps.wall.urls')),
-#     url(r'^shows/', include('apps.shows.urls')),
-#     url(r'^favoritebooks/', include('apps.favoritebooks.urls')),
-#     url(r'^admin/', admin.site.urls),
-# ]

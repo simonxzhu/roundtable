@@ -3,6 +3,7 @@ from django.db import models
 import re
 import bcrypt
 from datetime import datetime
+from enum import Enum
 
 
 class UserManager(models.Manager):
@@ -74,8 +75,43 @@ class Event(models.Model):
 
 
 class Restaurant(models.Model):
+    alias = models.CharField(max_length=255)
     name = models.CharField(max_length=100)
-    url = models.CharField(max_length=100)
-    rating = models.ManyToManyField(User, related_name="rate_restaurants")
+    image_url = models.CharField(max_length=255)
+    url = models.CharField(max_length=400)
+    display_phone = models.CharField(max_length=45)
+    review_count = models.IntegerField()
+    rating = models.DecimalField(max_digits=2, decimal_places=1)
+
+    events = models.ManyToManyField(Event, related_name="restaurants")
+
+    display_address = models.TextField()
+
+    photo1_url = models.CharField(max_length=100, default=None, blank=True, null=True)
+    photo2_url = models.CharField(max_length=100, default=None, blank=True, null=True)
+    photo3_url = models.CharField(max_length=100, default=None, blank=True, null=True)
+
+    price = models.CharField(max_length=45)
+
+    # XXX HOURS!
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+
+class Ratings(Enum):
+    Love = 2
+    Like = 1
+    Okay = 0
+    Dislike = -1
+    Hate = -5
+
+
+class Rating(models.Model):
+    rating = models.CharField(
+        max_length = 5,
+        choices=[(tag, tag.value) for tag in Ratings] # choices is a list of tuple
+    )
+    rater = models.ForeignKey(User, related_name="ratings", on_delete=models.CASCADE)
+    restaurant = models.ForeignKey(Restaurant, related_name="ratings", on_delete=models.CASCADE)
+
