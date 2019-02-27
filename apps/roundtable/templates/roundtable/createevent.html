@@ -1,86 +1,55 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Create</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'roundtable/css/bootstrap.min.css' %}">
-</head>
-<body>
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="/dashboard">Home</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item mr-4">
-                <a class="nav-link" href="#">Hello {{ user.first_name }} !</a>
-            </li>
-
-            <li class="nav-item">
-                <a class="nav-link" href="/process_logout">Log out</a>
-            </li>
-        </ul>
-    </div>
-</nav>
-<div class="container mt-5">
-    <div class="row d-flex justify-content-between">
-        <div class="col-8">
-            <form action="/process_addjob" method="post" id="new_job">
-                {% csrf_token %}
-                <div class="form-group row">
-                    <label for="title" class="col-sm-3 col-form-label">Title</label>
-                    {% if messages %}
-                        <div class="messages text-danger d-inline-block ml-2">
-                            {% for message in messages %}
-                                {% if message.tags == 'title error' %}
-                                    <small>{{ message }}</small>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
-                    {% endif %}
-                    <div class="col-sm-9">
-                        <input type="text" class="form-control" id="title" name="title">
-                    </div>
-                </div>
-                <div class="form-group row">
-                    <form>
-                        <label for="location" class="col-sm-3 col-form-label">Location</label>
-                        {% if messages %}
-                            <div class="messages text-danger d-inline-block ml-2">
-                                {% for message in messages %}
-                                    {% if message.tags == 'location error' %}
-                                        <small>{{ message }}</small>
-                                    {% endif %}
-                                {% endfor %}
-                            </div>
-                        {% endif %}
+{% extends 'base.html' %}
+{% load static %}
+{% block dashboard %}
+    <div class="container mt-5">
+        <div class="row d-flex justify-content-between">
+            <div class="col-8">
+                <form action="/process_addevent" method="post" id="new_event">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label for="title" class="col-sm-3 col-form-label">Title</label>
                         <div class="col-sm-9">
-                            <input type="text" class="form-control" id="location" name="location">
-                            <a href="#" class="float-right mt-2">Search</a>
+                            <input type="text" class="form-control" id="title" name="title">
                         </div>
-                    </form>
-                </div>
-                <div class="bg-info p-5"
-                     style="background-image: url('../../static/roundtable/img/map.png'); background-size:contain">
-                </div>
-                <a href="https://www.yelp.com/" target="_blank" role="button" class="btn btn-danger mt-3">Add
-                    restaurant</a>
-                <div class="form-group row mt-3">
-                    <label for="comment" class="col-sm-3 col-form-label">Comment</label>
-                    <div class="col-sm-9">
-                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                     </div>
-                </div>
-                <button type="submit" class="btn btn-primary float-right">Publish</button>
-            </form>
+                    <div class="form-group row">
+                        <form>
+                            <label for="location" class="col-sm-3 col-form-label">Location</label>
+                            <div class="col-sm-9">
+                                <input type="text" class="form-control" id="location" name="location">
+                                <a href="#" class="float-right m-3">Search</a>
+                            </div>
+                        </form>
+                        <div class="container mb-4">
+                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22864.11283411948!2d-73.96468908098944!3d40.630720240038435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY%2C+USA!5e0!3m2!1sen!2sbg!4v1540447494452"
+                                    width="100%" height="380" frameborder="0" style="border:0" allowfullscreen></iframe>
+                        </div>
+
+                        <div class="container">
+                            <div class="form">
+                                <form action="" method="post" role="form" class="contactForm">
+                                    <div class="form-group">
+                                        <input type="text" class="form-control" name="v" id="restaurant_url"
+                                               placeholder="Paste restaurant_url here"
+                                               data-rule="minlen:4"
+                                               data-msg="Please enter at least 8 chars of subject"/>
+                                        <div class="validation"></div>
+                                    </div>
+                                    <div class="form-group">
+                        <textarea class="form-control" name="message" rows="5" data-rule="required"
+                                  data-msg="Please write something for us" placeholder="Message"></textarea>
+                                        <div class="validation"></div>
+                                    </div>
+                                    <div class="text-center">
+                                        <button type="submit">Publish</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                        </div>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+{% endblock %}

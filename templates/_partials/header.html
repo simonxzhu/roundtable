@@ -1,0 +1,31 @@
+<!--==========================
+  Header
+============================-->
+<header id="header">
+    <div class="container">
+
+        <div id="logo" class="pull-left">
+            <h1><a href="#body" class="scrollto">Round<span>table</span></a></h1>
+            <!-- Uncomment below if you prefer to use an image logo -->
+            <!-- <a href="#body"><img src="img/logo.png" alt="" title="" /></a>-->
+        </div>
+
+        <nav id="nav-menu-container">
+            <ul class="nav-menu">
+                {% if 'user_id' not in request.session %}
+                    <li class="menu-active"><a href='/'>Home</a></li>
+                    {% else %}
+                        <li class="menu-active"><a href='/dashboard'>Home</a></li>
+                        <li><a href="/events/new">Create</a></li>
+                {% endif %}
+                <li><a href="#about">About Us</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+                {% if request.session.user_id != None %}
+                    <li><a class="nav-link" href="/process_logout">Log out</a></li>
+
+                {% endif %}
+            </ul>
+        </nav><!-- #nav-menu-container -->
+    </div>
+</header><!-- #header -->
