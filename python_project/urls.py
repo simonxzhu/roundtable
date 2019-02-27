@@ -22,20 +22,4 @@ from django.conf.urls.static import static
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^', include('apps.roundtable.urls')),
-
-<<<<<<< HEAD
-]  # + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
-
-#
-# urlpatterns = [
-#     url(r'^', include('apps.application.urls')),
-#     url(r'^login/', include('apps.login.urls')),
-#     url(r'^wall/', include('apps.wall.urls')),
-#     url(r'^shows/', include('apps.shows.urls')),
-#     url(r'^favoritebooks/', include('apps.favoritebooks.urls')),
-#     url(r'^admin/', admin.site.urls),
-# ]
-=======
 ]
->>>>>>> 47e25e05090bf77a7edcc02daa0654b91a283687
