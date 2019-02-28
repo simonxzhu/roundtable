@@ -1,95 +1,98 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block dashboard %}
-    <div class="container mt-5">
-        <div class="row d-flex justify-content-between">
-            <div class="col-8">
-                <form action="/process_addevent" method="post" id="new_event">
-                    {% csrf_token %}
-                    <div class="form-group row">
-                        <label for="title" class="col-sm-3 col-form-label">Title</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="title" name="title">
-                        </div>
-                    </div>
-                    <div class="form-group row">
-                        <label for="time" class="col-sm-3 col-form-label">Date</label>
-                        <div class="col-sm-9">
-                            <input type="datetime-local" class="form-control" id="time" name="time">
-                        </div>
-                    </div>
-                    <div class="form-group row">
+<head>
+    <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+    {% load static %}
+    <script src="{% static 'roundtable/js/script.js' %}"></script>
+</head>
 
-
-                        <div class="container">
-                            <div class="form">
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="rest1" id="restaurant_url"
-                                           placeholder="Paste restaurant_url here"
-                                           data-rule="minlen:4"
-                                           data-msg="Please enter at least 8 chars of subject"/>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                                    <input type="text" class="form-control" name="rest2" id="restaurant_url"
-                                           placeholder="Paste restaurant_url here"
-                                           data-rule="minlen:4"
-                                           data-msg="Please enter at least 8 chars of subject"/>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="form-group">
-                        <textarea class="form-control" name="message" rows="5" data-rule="required"
-                                  data-msg="Please write something for us" placeholder="Message"></textarea>
-                                    <div class="validation"></div>
-                                </div>
-                                <div class="text-center">
-                                    <button type="submit">Publish</button>
-                                </div>
-                            </div>
-
-                        </div>
-                    </div>
-                </form>
-
-                <div class="row d-flex justify-content-between">
-                    <div class="col-8">
-                        <form action="/process_search" method="post" id="new_event">
-                            {% csrf_token %}
-                            <div class="form-inline">
-                                <label for="location" class="col-sm-3 col-form-label">Location</label>
-                                <div class="col-sm-9">
-                                    <input type="text" class="form-control" id="location" name="location">
-                                    <button type="submit" class="btn btn-primary ml-3">Search</button>
-                                </div>
-                            </div>
-                        </form>
-                        <div class="container mt-5">
-                            {% if 'search_url' in request.session %}
-                                <iframe id="google-map" width="100%" height="380" frameborder="0"
-                                        style="border:0"
-                                        src="{{ request.session.search_url }}"
-                                        allowfullscreen>
-                                </iframe>
-                            {% endif %}
-                        </div>
-                        {% if 'top_restaurants' in request.session %}
-                            {% for rest in request.session.top_restaurants %}
-                                <div class="container-fluid yelp-restaurants">
-                                    <div class="card" style="width: 18rem;">
-                                        <img src="{{ rest.image_url }}" class="card-img-top" alt="...">
-                                        <div class="card-body">
-                                            <h5 class="card-title">{{ rest.name }}</h5>
-                                            <a href="{{ rest.url }}" class="btn btn-primary">Check on yelp</a>
-                                        </div>
-                                    </div>
-                                </div>
-
-                            {% endfor %}
-                        {% endif %}
+<body>
+    <div class="row mt-5">
+        <div class="container d-inline-block col-sm-6">
+            <form action="/process_addevent" method="post" id="new_event">
+                {% csrf_token %}
+                <div class="form-group row">
+                    <label for="title" class="col-sm-3 col-form-label">Title</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="title" name="title">
                     </div>
                 </div>
+                <div class="form-group row">
+                    <label for="time" class="col-sm-3 col-form-label">Date</label>
+                    <div class="col-sm-9">
+                        <input type="datetime-local" class="form-control" id="time" name="time">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label for="location" class="col-sm-3 col-form-label">Location</label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="location" name="location">
+                    </div>
+                    <button class="btn btn-primary col-sm-2">Search</button>
+                </div>
+
+                <div class="form-group" id="field" >
+                    <div id="field1">
+                        <div class="form-group">
+                            <input type="text" class="form-control" name="rest1" id="restaurant_url"
+                                   placeholder="Paste restaurant_url here"
+                                   data-rule="minlen:4"
+                                   data-msg="Please enter at least 8 chars of subject"/>
+                            <div class="validation"></div>
+                        </div>
+                    </div>
+
+                </div>                    
+                <div class="form-group">
+                    <textarea class="form-control" name="message" rows="5" data-rule="required" data-msg="Please write something for us" placeholder="Message" disabled></textarea>
+                    <div class="validation"></div>
+                </div>
+
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-success">Create Event</button>
+                </div>
+            </form>  
+        </div>
+
+        <div class="container d-inline-block col-sm-5">
+            <button id="add-more" name="add-more" class="btn btn-primary">Add Another Restaurant</button>
+            <form action="/process_search" method="post" id="new_event">
+                {% csrf_token %}
+                <div class="form-inline">
+                    <label for="location" class="col-sm-3 col-form-label">Location</label>
+                    <div class="col-sm-9">
+                        <input type="text" class="form-control" id="location" name="location">
+                        <button type="submit" class="btn btn-primary ml-3">Search</button>
+                    </div>
+                </div>
+            </form>
+            <div class="container mt-5">
+                {% if 'search_url' in request.session %}
+                    <iframe id="google-map" width="100%" height="380" frameborder="0"
+                            style="border:0"
+                            src="{{ request.session.search_url }}"
+                            allowfullscreen>
+                    </iframe>
+                {% endif %}
             </div>
+            {% if 'top_restaurants' in request.session %}
+                {% for rest in request.session.top_restaurants %}
+                    <div class="container-fluid yelp-restaurants">
+                        <div class="card">
+                            <img src="{{ rest.image_url }}" class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ rest.name }}</h5>
+                                <a href="{{ rest.url }}" class="btn btn-primary">Check on yelp</a>
+                            </div>
+                        </div>
+                    </div>
+
+                {% endfor %}
+            {% endif %}
         </div>
     </div>
+</body>
 {% endblock %}
 

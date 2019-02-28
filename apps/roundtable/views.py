@@ -90,90 +90,56 @@ def process_addevent(request):
     # XXX Add validations!
     # XX This is hardcoded to 3 restaurants, use jquery to do something smarter
     url_pattern = r'https://www.yelp.com/biz/(.+)'
-    url1 = ""
-    url2 = ""
-    if form['rest1']:
-        try:
-            rest1 = form['rest1'].split("?")[0]
-            url1 = re.search(url_pattern, rest1).group(1)
-        except AttributeError:
-            print("url not found.. should have been caught by validator")
-    print(url1)
-    if form['rest1']:
-        try:
-            rest2 = form['rest2'].split("?")[0]
-            url2 = re.search(url_pattern, rest1).group(1)
-        except AttributeError:
-            print("url not found.. should have been caught by validator")
-    print(url2)
+    url = ""
+    n = 1
+    rest = 'rest' + str(n)
+    rest_obj = None
+    while rest in form:
 
-    if rest1 != "":
-        try:
-            rest1 = Restaurant.objects.get(alias=url1)
-        except Restaurant.DoesNotExist:
-            print(f'Querying API for rest1 = {url1}')
-            yelp_api = YelpAPI('MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+        if form[rest]:
+            try:
+                rest_url = form[rest].split("?")[0]
+                url = re.search(url_pattern, rest_url).group(1)
+            except AttributeError:
+                print("url not found.. should have been caught by validator")
+                url=""
+        print(url)
 
-            r = yelp_api.business_query(id=url1)
-            pprint.pprint(r)
-            photo1_url = ""
-            photo2_url = ""
-            photo3_url = ""
-            if len(r['photos']) > 0:
-                photo1_url = r['photos'][0]
-            if len(r['photos']) > 1:
-                photo2_url = r['photos'][1]
-            if len(r['photos']) > 2:
-                photo3_url = r['photos'][2]
-            new_rest1 = Restaurant.objects.create(
-                alias=r['alias'],
-                name=r['name'],
-                image_url=r['image_url'],
-                url=r['url'],
-                display_phone=r['display_phone'],
-                review_count=r['review_count'],
-                rating=r['rating'],
-                photo1_url=photo1_url,
-                photo2_url=photo2_url,
-                photo3_url=photo3_url,
-                # price=r['price']
-            )
-            event.restaurants.add(new_rest1)
-            event.save()
+        if url != "":
+            try:
+                rest_obj = Restaurant.objects.get(alias=url)
+            except Restaurant.DoesNotExist:
+                print(f'Querying API for rest1 = {url}')
+                yelp_api = YelpAPI('MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
 
-    if rest2 != "":
-        try:
-            rest2 = Restaurant.objects.get(alias=url2)
-        except Restaurant.DoesNotExist:
-            print(f'Querying API for rest1 = {url2}')
-            yelp_api = YelpAPI('MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
-
-            r = yelp_api.business_query(id=url2)
-            pprint.pprint(r)
-            photo1_url = ""
-            photo2_url = ""
-            photo3_url = ""
-            if len(r['photos']) > 0:
-                photo1_url = r['photos'][0]
-            if len(r['photos']) > 1:
-                photo2_url = r['photos'][1]
-            if len(r['photos']) > 2:
-                photo3_url = r['photos'][2]
-            new_rest2 = Restaurant.objects.create(
-                alias=r['alias'],
-                name=r['name'],
-                image_url=r['image_url'],
-                url=r['url'],
-                display_phone=r['display_phone'],
-                review_count=r['review_count'],
-                rating=r['rating'],
-                photo1_url=photo1_url,
-                photo2_url=photo2_url,
-                photo3_url=photo3_url,
-                # price=r['price']
+                r = yelp_api.business_query(id=url)
+                pprint.pprint(r)
+                photo1_url = ""
+                photo2_url = ""
+                photo3_url = ""
+                if len(r['photos']) > 0:
+                    photo1_url = r['photos'][0]
+                if len(r['photos']) > 1:
+                    photo2_url = r['photos'][1]
+                if len(r['photos']) > 2:
+                    photo3_url = r['photos'][2]
+                rest_obj = Restaurant.objects.create(
+                    alias=r['alias'],
+                    name=r['name'],
+                    image_url=r['image_url'],
+                    url=r['url'],
+                    display_phone=r['display_phone'],
+                    review_count=r['review_count'],
+                    rating=r['rating'],
+                    photo1_url=photo1_url,
+                    photo2_url=photo2_url,
+                    photo3_url=photo3_url,
+                    # price=r['price']
                 )
-            event.restaurants.add(new_rest2)
-            event.save()
+                event.restaurants.add(rest_obj)
+                event.save()
+        n += 1
+        rest = 'rest' + str(n)
 
     return redirect("/dashboard")
 
