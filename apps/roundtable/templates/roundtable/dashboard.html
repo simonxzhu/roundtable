@@ -1,37 +1,59 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block dashboard %}
-
-<div class="container mt-5">
-    <a class="nav-link" href="#">Hello {{ user.first_name }} !</a>
-    <div class="row">
-        <div class="h3 mb-3">Parties:</div>
-        <table class="table events_not_taken">
-            <thead class="thead-dark">
-            <tr>
-                <th scope="col">event</th>
-                <th scope="col">Location</th>
-                <th scope="col">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for event in events %}
-                    <tr style="background-image: url({{event.restaurants.first.image_url}})">
-                        <td>{{ event.title }}</td>
-                        <td>{{ event.location }}</td>
+<body>
+<div class="mt-5">
+    <h1 class="m-3" style="color:#0C2E8A">Hello {{ user.first_name }}!</h1>
+    {% if events %}
+    <h2 class="m-3" style="color:#0C2E8A">Here are your upcoming events:</h2>
+    
+    {% for event in events %}
+    <div class="m-3 p-3 rounded-top" style="background-image: url({{event.restaurants.first.image_url}}); background-size:cover">
+            <a data-toggle="collapse" href="#event{{event.id}}">
+            <div class="m-3 p-1">
+                <div class="row">
+                    <h1 class="rounded p-2" style="color:#0C2E8A; background-color:#50D8AF">{{event.title}}</h2>
+                </div>
+                <div class="row" style="color:#50D8AF; text-shadow: 2px 2px 2px #0C2E8A ">
+                    <h2 class="col-sm-6 text-left">{{event.location}}</h2>
+                    <h2 class="col-sm-6 text-right">{{event.time}}</h2>
+                </div>
+            </div>
+            </a>
+            <div class="m-1 p-1 rounded-top collapse" id ="event{{event.id}}"style="background: linear-gradient(to bottom, #50D8AF, #0C2E8A)">
+            <div class="p-3 rounded-top" style="background-color: #50D8AF">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th></th>
+                            <th>Y</th>
+                            <th>E</th>
+                            <th>S</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
                         <td>
-                            <a href="/events/{{ event.id }}">View</a> |
-                            {% if event.hosted_by == user %}
-                                <a href="/process_delete/{{ event.id }}">Remove</a> |
-                                <a href="/events/edit/{{ event.id }}">Edit</a> |
-                            {% endif %}
-                            <a href="/process_takeevent/{{ event.id }}">Add</a>
+                            <h1>REST 1 INFO</h1>
                         </td>
-                    </tr>
-
-            {% endfor %}
-            </tbody>
-        </table>
+                        <td><i class="far fa-thumbs-up fa-2x"></i></td>
+                        <td><i class="far fa-thumbs-up fa-2x"></i></td>
+                        <td><i class="far fa-thumbs-down fa-2x"></i></td>
+                        <td><i class="far fa-thumbs-up fa-2x mr-3"></i> <i class="far fa-heart fa-2x mr-3"></i> <i class="far fa-check-square fa-2x mr-3"></i> <i class="far fa-thumbs-down fa-2x mr-3"></i> <i class="fas fa-ban fa-2x mr-3"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <a href="/process_takeevent/{{ event.id }}" class="btn btn-primary m-2">Suggest a Restaurant</a>
+                {% if event.hosted_by == user %}
+                <a href="/events/edit/{{ event.id }}" class="btn btn-primary m-2">Edit Event Details</a>
+                <a href="/process_delete/{{ event.id }}" class="btn btn-danger m-2">Cancel Event</a>
+                {% endif %}
+            </div>
+            </div>
     </div>
+    {% endfor %}
+    {% endif %}
 </div>
+</body>
 {% endblock %}

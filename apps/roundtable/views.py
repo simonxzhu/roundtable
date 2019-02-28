@@ -116,6 +116,15 @@ def process_addevent(request):
 
             r = yelp_api.business_query(id=url1)
             pprint.pprint(r)
+            photo1_url = ""
+            photo2_url = ""
+            photo3_url = ""
+            if len(r['photos']) > 0:
+                photo1_url = r['photos'][0]
+            if len(r['photos']) > 1:
+                photo2_url = r['photos'][1]
+            if len(r['photos']) > 2:
+                photo3_url = r['photos'][2]
             new_rest1 = Restaurant.objects.create(
                 alias=r['alias'],
                 name=r['name'],
@@ -124,10 +133,10 @@ def process_addevent(request):
                 display_phone=r['display_phone'],
                 review_count=r['review_count'],
                 rating=r['rating'],
-                photo1_url=r['photos'][0],
-                photo2_url=r['photos'][1],
-                photo3_url=r['photos'][2],
-                price=r['price']
+                photo1_url=photo1_url,
+                photo2_url=photo2_url,
+                photo3_url=photo3_url,
+                # price=r['price']
             )
             event.restaurants.add(new_rest1)
             event.save()
@@ -141,6 +150,15 @@ def process_addevent(request):
 
             r = yelp_api.business_query(id=url2)
             pprint.pprint(r)
+            photo1_url = ""
+            photo2_url = ""
+            photo3_url = ""
+            if len(r['photos']) > 0:
+                photo1_url = r['photos'][0]
+            if len(r['photos']) > 1:
+                photo2_url = r['photos'][1]
+            if len(r['photos']) > 2:
+                photo3_url = r['photos'][2]
             new_rest2 = Restaurant.objects.create(
                 alias=r['alias'],
                 name=r['name'],
@@ -149,10 +167,10 @@ def process_addevent(request):
                 display_phone=r['display_phone'],
                 review_count=r['review_count'],
                 rating=r['rating'],
-                photo1_url=r['photos'][0],
-                photo2_url=r['photos'][1],
-                photo3_url=r['photos'][2],
-                price=r['price']
+                photo1_url=photo1_url,
+                photo2_url=photo2_url,
+                photo3_url=photo3_url,
+                # price=r['price']
                 )
             event.restaurants.add(new_rest2)
             event.save()

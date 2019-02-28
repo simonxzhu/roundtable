@@ -91,7 +91,7 @@ class Restaurant(models.Model):
     photo2_url = models.CharField(max_length=100, default=None, blank=True, null=True)
     photo3_url = models.CharField(max_length=100, default=None, blank=True, null=True)
 
-    price = models.CharField(max_length=45)
+    price = models.CharField(max_length=45, default="", blank=True, null=True)
 
     # XXX HOURS!
 
@@ -110,7 +110,8 @@ class Ratings(Enum):
 class Rating(models.Model):
     rating = models.CharField(
         max_length = 5,
-        choices=[(tag, tag.value) for tag in Ratings] # choices is a list of tuple
+        choices=[(tag, tag.value) for tag in Ratings], # choices is a list of tuple
+        default=Ratings.Okay
     )
     rater = models.ForeignKey(User, related_name="ratings", on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, related_name="ratings", on_delete=models.CASCADE)
