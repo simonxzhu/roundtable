@@ -46,17 +46,18 @@
                                                 <h1 class="text-white">{{ rest.name }}</h1>
                                             </div>
                                         </td>
-                                        <td><i class="far fa-thumbs-up fa-2x"></i></td>
+                                        <td><i class="far fa-thumbs-up fa-2x"></td>
                                         {% for guest in event.users_who_join.all %}
-                                            <td><i class="far fa-thumbs-up fa-2x"></i></td>
+                                            <td>XXX
+                                            </td>
                                         {% endfor %}
                                         {#  <td><i class="far fa-thumbs-down fa-2x"></i></td>#}
                                         <td>
                                             <a class="text-dark" href="#">
-                                                <i class="far fa-thumbs-up fa-2x mr-3"></i>
+                                                <i class="far fa-heart fa-2x mr-3"></i>
                                             </a>
                                             <a class="text-dark" href="#">
-                                                <i class="far fa-heart fa-2x mr-3"></i>
+                                                <i class="far fa-thumbs-up fa-2x mr-3"></i>
                                             </a>
                                             <a class="text-dark" href="#">
                                                 <i class="far fa-check-square fa-2x mr-3"></i>
@@ -73,33 +74,36 @@
                                 </tbody>
                             </table>
 
-                            <form class="form-inline" action="/link_restaurant/{{ event.id }}" method="post">
-                                {% csrf_token %}
-                                <div class="form-group row">
-                                    <input type="text" class="form-control" name="rest" id="restaurant_url"
-                                           placeholder="Paste restaurant_url here"
-                                           data-rule="minlen:4"
-                                           data-msg="Please enter at least 8 chars of subject"/>
-                                    <div class="validation"></div>
-                                    <button type="submit" class="btn btn-primary m-2">Suggest a Restaurant</button>
+                            <div class="form-grid">
+                                <form action="/link_restaurant/{{ event.id }}" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row mb-2">
+                                        <input type="text" class="form-control col" name="rest" id="restaurant_url"
+                                               placeholder="Paste restaurant_url here"
+                                               data-rule="minlen:4"
+                                               data-msg="Please enter at least 8 chars of subject"/>
+                                        <div class="validation"></div>
+                                        <button type="submit" class="btn btn-primary col-sm-2 ml-1">Suggest a Restaurant</button>
+                                        {% if event.hosted_by == user %}
+                                        <a href="/events/edit/{{ event.id }}" class="btn btn-primary col-sm-2 ml-3">Edit Event Details</a>
+                                        {% endif %}
+                                    </div>
+                                </form>
+                                <form action="/link_guest/{{ event.id }}" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-row mb-2">
+                                        <input type="text" class="form-control col" name="guest_id" placeholder="user_id"/>
+                                        <div class="validation"></div>
+                                        <button type="submit" class="btn btn-primary col-sm-2 ml-1">Invite a friend</button>
+                                        {% if event.hosted_by == user %}
+                                        <a href="/process_delete/{{ event.id }}" class="btn btn-danger col-sm-2 ml-3">Cancel Event</a>
+                                        {% endif %}
+                                    </div>
+                                </form>
 
-                                </div>
-                            </form>
-                            <form class="form-inline" action="/link_guest/{{ event.id }}" method="post">
-                                {% csrf_token %}
-                                <div class="form-group row">
-                                    <input type="text" class="form-control" name="guest_id" placeholder="user_id"/>
-                                    <div class="validation"></div>
-                                    <button type="submit" class="btn btn-primary m-2">Invite guests</button>
 
-                                </div>
-                            </form>
-                            {#                            <a href="/process_takeevent/{{ event.id }}" class="btn btn-primary m-2">Suggest a#}
-                            {#                                Restaurant</a>#}
-                            {% if event.hosted_by == user %}
-                                <a href="/events/edit/{{ event.id }}" class="btn btn-primary m-2">Edit Event Details</a>
-                                <a href="/process_delete/{{ event.id }}" class="btn btn-danger m-2">Cancel Event</a>
-                            {% endif %}
+                            </div>
+
                         </div>
                     </div>
                 </div>

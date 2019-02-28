@@ -1,13 +1,16 @@
-from django.shortcuts import render, redirect, HttpResponse
-from .models import User, Event, Restaurant, Rating, Ratings
-from django.contrib import messages
-from datetime import datetime
-from django.utils import timezone
 from yelpapi import YelpAPI
+
+from django.shortcuts import render, redirect, HttpResponse
+from django.db.models import Q
+from django.contrib import messages
+from django.utils import timezone
+
+from datetime import datetime
 import pprint
 import re
-
 import bcrypt
+
+from .models import User, Event, Restaurant, Rating, Ratings
 
 
 def index(request):
@@ -54,17 +57,25 @@ def process_login(request):
             return redirect('/dashboard')
 
 
+icon_map = {
+    (Ratings.Love, "fa-heart"),
+    (Ratings.Like, "fa-thumps-up"),
+    (Ratings.Okay, "fa-check-square"),
+    (Ratings.Dislike, "fa-thumbs-down"),
+    (Ratings.Hate, "fa-ban"),
+}
+
 def dashboard(request):
     # if 'user_id' in request.session:
 
     user = User.objects.get(id=request.session['user_id'])
 
-    events = Event.objects.all()
-    print("*"*50, User.objects.all())
+    events = Event.objects.all().order_by('time')
     context = {
         'user': user,
         'users': User.objects.all(),
-        'events': events
+        'events': events,
+        'icon_map': icon_map,
     }
 
     return render(request, 'roundtable/dashboard.html', context)

@@ -6,12 +6,13 @@
         .h1, .h2 {color: #0C2E8A;}
         .h1 {font-weight: 600;}
         .btn {background-color: #0C2E8A;}
+        .tagline {font-style: none; font-family: sans-serif}
     </style>
 </head>
 <body>
     <section id="intro">
         <div class="intro-content">
-            <h2><span style="text-decoration: none; color: orangered">"Where should we eat?"</span><br>Simplified</h2>
+            <h2 class="tagline"><span style="text-decoration: none; color: orangered; font-family:Georgia, serif; font-style: italic">"Where should we eat?"</span><br>Simplified</h2>
             <br>
             <div class="h1 mb-5 wow fadeInUp">Welcome! Sign in to manage your events!</div>
         </div>
@@ -27,7 +28,7 @@
 
     </section>
     <div class="container justify-content-between" style="position: relative; top:-5em; z-index: 100">
-        <div class="col-5 wow fadeInLeft d-inline-block align-top bg-white p-3 rounded-top text-center">
+        <div class="col-sm-5 wow fadeInLeft d-inline-block align-top bg-white p-3 rounded-top text-center">
             <div class=" h2 mb-5">Register</div>
             <form action="/process_register" method="POST" class="text-left">
                 {% csrf_token %}
@@ -102,7 +103,7 @@
                 </div>
             </form>
         </div>
-        <div class="col-5 offset-sm-1 wow fadeInRight d-inline-block align-top bg-white p-3 rounded-top text-center">
+        <div class="col-sm-5 offset-sm-1 wow fadeInRight d-inline-block align-top bg-white p-3 rounded-top text-center">
             <div class="h2 mb-5">Login</div>
             <form action="/process_login" method="POST" class="text-left">
                 {% csrf_token %}
