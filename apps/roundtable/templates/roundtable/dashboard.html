@@ -1,59 +1,112 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block dashboard %}
-<body>
-<div class="mt-5">
-    <h1 class="m-3" style="color:#0C2E8A">Hello {{ user.first_name }}!</h1>
-    {% if events %}
-    <h2 class="m-3" style="color:#0C2E8A">Here are your upcoming events:</h2>
-    
-    {% for event in events %}
-    <div class="m-3 p-3 rounded-top" style="background-image: url({{event.restaurants.first.image_url}}); background-size:cover">
-            <a data-toggle="collapse" href="#event{{event.id}}">
-            <div class="m-3 p-1">
-                <div class="row">
-                    <h1 class="rounded p-2" style="color:#0C2E8A; background-color:#50D8AF">{{event.title}}</h2>
+    <body>
+    <div class="mt-5">
+        <h1 class="m-3" style="color:#0C2E8A">Hello {{ user.first_name }}!</h1>
+        {% if events %}
+            <h2 class="m-3" style="color:#0C2E8A">Here are your upcoming events:</h2>
+
+            {% for event in events %}
+                <div class="m-3 p-3 rounded-top"
+                     style="background-image: url({{ event.restaurants.first.image_url }}); background-size:cover">
+                    <a data-toggle="collapse" href="#event{{ event.id }}">
+                        <div class="m-3 p-1">
+                            <div class="row">
+                                <h1 class="rounded p-2"
+                                    style="color:#0C2E8A; background-color:#50D8AF">{{ event.title }}</h2>
+                            </div>
+                            <div class="row" style="color:#50D8AF; text-shadow: 2px 2px 2px #0C2E8A ">
+                                <h2 class="col-sm-6 text-left">{{ event.location }}</h2>
+                                <h2 class="col-sm-6 text-right">{{ event.time }}</h2>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="m-1 p-1 rounded-top collapse" id="event{{ event.id }}"
+                         style="background: linear-gradient(to bottom, #50D8AF, #0C2E8A)">
+                        <div class="p-3 rounded-top" style="background-color: #50D8AF">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>Score</th>
+                                    {% for guest in event.users_who_join.all %}
+                                        <th>{{ guest.first_name }}</th>
+                                    {% endfor %}
+                                    <th><span class="text-danger">{{ user.first_name }}</span></th>
+
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for rest in event.restaurants.all %}
+                                    <tr>
+                                        <td>
+                                            <div style="background-image: url({{ rest.image_url }}); background-size:cover; max-width:18em; height:18em"
+                                                 class="p-5">
+                                                <h1 class="text-white">{{ rest.name }}</h1>
+                                            </div>
+                                        </td>
+                                        <td><i class="far fa-thumbs-up fa-2x"></i></td>
+                                        {% for guest in event.users_who_join.all %}
+                                            <td><i class="far fa-thumbs-up fa-2x"></i></td>
+                                        {% endfor %}
+                                        {#  <td><i class="far fa-thumbs-down fa-2x"></i></td>#}
+                                        <td>
+                                            <a class="text-dark" href="#">
+                                                <i class="far fa-thumbs-up fa-2x mr-3"></i>
+                                            </a>
+                                            <a class="text-dark" href="#">
+                                                <i class="far fa-heart fa-2x mr-3"></i>
+                                            </a>
+                                            <a class="text-dark" href="#">
+                                                <i class="far fa-check-square fa-2x mr-3"></i>
+                                            </a>
+                                            <a class="text-dark" href="#">
+                                                <i class="far fa-thumbs-down fa-2x mr-3"></i>
+                                            </a>
+                                            <a class="text-dark" href="#">
+                                                <i class="fas fa-ban fa-2x mr-3"></i>
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                            <form class="form-inline" action="/link_restaurant/{{ event.id }}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <input type="text" class="form-control" name="rest" id="restaurant_url"
+                                           placeholder="Paste restaurant_url here"
+                                           data-rule="minlen:4"
+                                           data-msg="Please enter at least 8 chars of subject"/>
+                                    <div class="validation"></div>
+                                    <button type="submit" class="btn btn-primary m-2">Suggest a Restaurant</button>
+
+                                </div>
+                            </form>
+                            <form class="form-inline" action="/link_guest/{{ event.id }}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <input type="text" class="form-control" name="guest_id" placeholder="user_id"/>
+                                    <div class="validation"></div>
+                                    <button type="submit" class="btn btn-primary m-2">Invite guests</button>
+
+                                </div>
+                            </form>
+                            {#                            <a href="/process_takeevent/{{ event.id }}" class="btn btn-primary m-2">Suggest a#}
+                            {#                                Restaurant</a>#}
+                            {% if event.hosted_by == user %}
+                                <a href="/events/edit/{{ event.id }}" class="btn btn-primary m-2">Edit Event Details</a>
+                                <a href="/process_delete/{{ event.id }}" class="btn btn-danger m-2">Cancel Event</a>
+                            {% endif %}
+                        </div>
+                    </div>
                 </div>
-                <div class="row" style="color:#50D8AF; text-shadow: 2px 2px 2px #0C2E8A ">
-                    <h2 class="col-sm-6 text-left">{{event.location}}</h2>
-                    <h2 class="col-sm-6 text-right">{{event.time}}</h2>
                 </div>
-            </div>
-            </a>
-            <div class="m-1 p-1 rounded-top collapse" id ="event{{event.id}}"style="background: linear-gradient(to bottom, #50D8AF, #0C2E8A)">
-            <div class="p-3 rounded-top" style="background-color: #50D8AF">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <th>Y</th>
-                            <th>E</th>
-                            <th>S</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                        <td>
-                            <h1>REST 1 INFO</h1>
-                        </td>
-                        <td><i class="far fa-thumbs-up fa-2x"></i></td>
-                        <td><i class="far fa-thumbs-up fa-2x"></i></td>
-                        <td><i class="far fa-thumbs-down fa-2x"></i></td>
-                        <td><i class="far fa-thumbs-up fa-2x mr-3"></i> <i class="far fa-heart fa-2x mr-3"></i> <i class="far fa-check-square fa-2x mr-3"></i> <i class="far fa-thumbs-down fa-2x mr-3"></i> <i class="fas fa-ban fa-2x mr-3"></i></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <a href="/process_takeevent/{{ event.id }}" class="btn btn-primary m-2">Suggest a Restaurant</a>
-                {% if event.hosted_by == user %}
-                <a href="/events/edit/{{ event.id }}" class="btn btn-primary m-2">Edit Event Details</a>
-                <a href="/process_delete/{{ event.id }}" class="btn btn-danger m-2">Cancel Event</a>
-                {% endif %}
-            </div>
-            </div>
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
-    {% endfor %}
-    {% endif %}
-</div>
-</body>
+    </body>
 {% endblock %}

@@ -58,9 +58,12 @@ def dashboard(request):
     # if 'user_id' in request.session:
 
     user = User.objects.get(id=request.session['user_id'])
+
     events = Event.objects.all()
+    print("*"*50, User.objects.all())
     context = {
         'user': user,
+        'users': User.objects.all(),
         'events': events
     }
 
@@ -208,3 +211,62 @@ def process_search(request):
     request.session['top_restaurants'] = result
 
     return redirect("/events/new")
+
+
+def link_restaurant(request, event_id):
+    form = request.POST
+    url_pattern = r'https://www.yelp.com/biz/(.+)'
+    url1 = ""
+    event = Event.objects.get(id=event_id)
+    if form['rest']:
+        try:
+            rest = form['rest'].split("?")[0]
+            url1 = re.search(url_pattern, rest).group(1)
+        except AttributeError:
+            print("url not found.. should have been caught by validator")
+    print(url1)
+
+    if rest != "":
+        try:
+            rest = Restaurant.objects.get(alias=url1)
+        except Restaurant.DoesNotExist:
+            print(f'Querying API for rest1 = {url1}')
+            yelp_api = YelpAPI(
+                'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+
+            r = yelp_api.business_query(id=url1)
+            pprint.pprint(r)
+            photo1_url = ""
+            photo2_url = ""
+            photo3_url = ""
+            if len(r['photos']) > 0:
+                photo1_url = r['photos'][0]
+            if len(r['photos']) > 1:
+                photo2_url = r['photos'][1]
+            if len(r['photos']) > 2:
+                photo3_url = r['photos'][2]
+            new_rest = Restaurant.objects.create(
+                alias=r['alias'],
+                name=r['name'],
+                image_url=r['image_url'],
+                url=r['url'],
+                display_phone=r['display_phone'],
+                review_count=r['review_count'],
+                rating=r['rating'],
+                photo1_url=photo1_url,
+                photo2_url=photo2_url,
+                photo3_url=photo3_url,
+                # price=r['price']
+            )
+            event.restaurants.add(new_rest)
+            event.save()
+
+    return redirect('/dashboard')
+
+
+def link_guest(request, event_id):
+    user = User.objects.get(id=request.POST['guest_id'])
+    event = Event.objects.get(id=event_id)
+    event.users_who_join.add(user)
+
+    return redirect('/dashboard')
