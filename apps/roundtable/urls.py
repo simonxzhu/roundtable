@@ -10,4 +10,6 @@ urlpatterns = [
     url(r'^process_login$', views.process_login),
     url(r'^process_addevent$', views.process_addevent),
     url(r'^process_delete/(?P<id>\d+)$', views.process_delete),
+    url(r'^process_search$', views.process_search),
+
 ]

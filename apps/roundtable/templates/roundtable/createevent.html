@@ -19,15 +19,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label for="location" class="col-sm-3 col-form-label">Location</label>
-                        <div class="col-sm-9">
-                            <input type="text" class="form-control" id="location" name="location">
-                            <a href="#" class="float-right m-3">Search</a>
-                        </div>
-                        <div class="container mb-4">
-                            <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d22864.11283411948!2d-73.96468908098944!3d40.630720240038435!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89c24fa5d33f083b%3A0xc80b8f06e177fe62!2sNew+York%2C+NY%2C+USA!5e0!3m2!1sen!2sbg!4v1540447494452"
-                                    width="100%" height="380" frameborder="0" style="border:0" allowfullscreen></iframe>
-                        </div>
+
 
                         <div class="container">
                             <div class="form">
@@ -58,6 +50,44 @@
                         </div>
                     </div>
                 </form>
+
+                <div class="row d-flex justify-content-between">
+                    <div class="col-8">
+                        <form action="/process_search" method="post" id="new_event">
+                            {% csrf_token %}
+                            <div class="form-inline">
+                                <label for="location" class="col-sm-3 col-form-label">Location</label>
+                                <div class="col-sm-9">
+                                    <input type="text" class="form-control" id="location" name="location">
+                                    <button type="submit" class="btn btn-primary ml-3">Search</button>
+                                </div>
+                            </div>
+                        </form>
+                        <div class="container mt-5">
+                            {% if 'search_url' in request.session %}
+                                <iframe id="google-map" width="100%" height="380" frameborder="0"
+                                        style="border:0"
+                                        src="{{ request.session.search_url }}"
+                                        allowfullscreen>
+                                </iframe>
+                            {% endif %}
+                        </div>
+                        {% if 'top_restaurants' in request.session %}
+                            {% for rest in request.session.top_restaurants %}
+                                <div class="container-fluid yelp-restaurants">
+                                    <div class="card" style="width: 18rem;">
+                                        <img src="{{ rest.image_url }}" class="card-img-top" alt="...">
+                                        <div class="card-body">
+                                            <h5 class="card-title">{{ rest.name }}</h5>
+                                            <a href="{{ rest.url }}" class="btn btn-primary">Check on yelp</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>

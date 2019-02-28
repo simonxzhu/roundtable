@@ -180,3 +180,31 @@ def process_addevent(request):
 def process_delete(request, id):
     Event.objects.get(id=id).delete()
     return redirect("/dashboard")
+
+
+def process_search(request):
+    if 'search_url' in request.session or 'top_restaurants' in request.session:
+        del request.session['search_url']
+        del request.session['top_restaurants']
+
+    form = request.POST
+    # googlemaps display
+    googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key=AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI&q=restaurant+in+{form['location']}"
+    request.session['search_url'] = googlemaps_url
+
+    # yelpapi call
+    yelp_api = YelpAPI(
+        'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+    businesses = yelp_api.search_query(term='restaurant', location=form['location'], sort_by='rating', limit=5)['businesses']
+    # shape the response (name, image_url, url)
+    restaurant = {}
+    result = []
+    for business in businesses:
+        for k, v in business.items():
+            if k == "name" or k == "image_url" or k == "url":
+                restaurant[k] = v
+        result.append(restaurant)
+        restaurant = {}
+    request.session['top_restaurants'] = result
+
+    return redirect("/events/new")
