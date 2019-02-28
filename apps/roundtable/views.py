@@ -139,8 +139,8 @@ def process_addevent(request):
                     photo3_url=photo3_url,
                     # price=r['price']
                 )
-                event.restaurants.add(rest_obj)
-                event.save()
+            event.restaurants.add(rest_obj)
+            event.save()
         n += 1
         rest = 'rest' + str(n)
 
@@ -191,10 +191,10 @@ def link_restaurant(request, event_id):
         except AttributeError:
             print("url not found.. should have been caught by validator")
     print(url1)
-
+    new_rest = None
     if rest != "":
         try:
-            rest = Restaurant.objects.get(alias=url1)
+            new_rest = Restaurant.objects.get(alias=url1)
         except Restaurant.DoesNotExist:
             print(f'Querying API for rest1 = {url1}')
             yelp_api = YelpAPI(
@@ -224,8 +224,8 @@ def link_restaurant(request, event_id):
                 photo3_url=photo3_url,
                 # price=r['price']
             )
-            event.restaurants.add(new_rest)
-            event.save()
+        event.restaurants.add(new_rest)
+        event.save()
 
     return redirect('/dashboard')
 

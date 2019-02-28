@@ -52,12 +52,13 @@
 
                 <div class="text-center">
                     <button type="submit" class="btn btn-success">Create Event</button>
+                                <button id="add-more" name="add-more" class="btn btn-primary">Add Another Restaurant</button>
+
                 </div>
             </form>  
         </div>
 
         <div class="container d-inline-block col-sm-5">
-            <button id="add-more" name="add-more" class="btn btn-primary">Add Another Restaurant</button>
             <form action="/process_search" method="post" id="new_event">
                 {% csrf_token %}
                 <div class="form-inline">
@@ -84,7 +85,7 @@
                             <img src="{{ rest.image_url }}" class="card-img-top" alt="...">
                             <div class="card-body">
                                 <h5 class="card-title">{{ rest.name }}</h5>
-                                <a href="{{ rest.url }}" class="btn btn-primary">Check on yelp</a>
+                                <a href="{{ rest.url }}" class="btn btn-primary" target="_blank">Check on yelp</a>
                             </div>
                         </div>
                     </div>
