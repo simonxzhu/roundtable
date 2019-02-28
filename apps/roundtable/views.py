@@ -72,7 +72,6 @@ def dashboard(request):
 
 def createevent(request):
     user = User.objects.get(id=request.session['user_id'])
-
     context = {
         'user': user
     }
@@ -156,16 +155,18 @@ def process_search(request):
         del request.session['search_url']
         del request.session['top_restaurants']
 
-    form = request.POST
+    form = request.GET
+    print(form)
     # googlemaps display
-    googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key=AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI&q=restaurant+in+{form['location']}"
+    googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key=AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI&q={form['food_type']}+in+{form['location']}"
     request.session['search_url'] = googlemaps_url
-
+    print(googlemaps_url)
     # yelpapi call
     yelp_api = YelpAPI(
         'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
-    businesses = yelp_api.search_query(term='restaurant', location=form['location'], sort_by='rating', limit=5)['businesses']
+    businesses = yelp_api.search_query(term=form['food_type'], location=form['location'], sort_by='rating', limit=5)['businesses']
     # shape the response (name, image_url, url)
+    pprint.pprint(businesses)
     restaurant = {}
     result = []
     for business in businesses:
@@ -175,8 +176,12 @@ def process_search(request):
         result.append(restaurant)
         restaurant = {}
     request.session['top_restaurants'] = result
+    context = {
+        'googlemaps_url': googlemaps_url,
+        'top_restaurants': result
+    }
 
-    return redirect("/events/new")
+    return render(request, 'roundtable/partials/rests_map.html', context)
 
 
 def link_restaurant(request, event_id):
