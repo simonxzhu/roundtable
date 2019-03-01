@@ -10,12 +10,13 @@
     <body>
     <div class="row mt-5">
         <div class="container d-inline-block col-sm-6">
-            <form action="/process_addevent" method="post" id="new_event">
+            <form action="/process_update/{{ event.id }}" method="post" id="new_event">
                 {% csrf_token %}
                 <div class="form-group row">
                     <label for="title" class="col-sm-3 col-form-label">Title</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="title" name="title" autocomplete="off">
+                        <input type="text" class="form-control" id="title" name="title" autocomplete="off"
+                               value="{{ event.title }}">
                         {% if messages %}
                             <div class="messages text-danger">
                                 {% for message in messages %}
@@ -31,7 +32,8 @@
                 <div class="form-group row">
                     <label for="time" class="col-sm-3 col-form-label">Date</label>
                     <div class="col-sm-9">
-                        <input type="datetime-local" class="form-control" id="time" name="time" value="{{ current }}" autocomplete="off">
+                        <input type="datetime-local" class="form-control" id="time" name="time" value="{{ event.time }}"
+                               autocomplete="off">
                         {% if messages %}
                             <div class="messages text-danger">
                                 {% for message in messages %}
@@ -46,7 +48,7 @@
                 <div class="form-group row">
                     <label for="location" class="col-sm-3 col-form-label">Location</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="location" name="location" autocomplete="off">
+                        <input type="text" class="form-control" id="location" name="location" value="{{ event.location }}" autocomplete="off">
                         {% if messages %}
                             <div class="messages text-danger">
                                 {% for message in messages %}
@@ -73,13 +75,13 @@
                 </div>
                 <div class="form-group">
                     <textarea class="form-control" name="message" rows="5" data-rule="required"
-                              data-msg="Please write something for us" placeholder="Message" name="message"></textarea>
+                              data-msg="Please write something for us" placeholder="Message"></textarea>
                     <div class="validation"></div>
                 </div>
 
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-success">Create Event</button>
+                    <button type="submit" class="btn btn-success">Update Event</button>
                     <button id="add-more" name="add-more" class="btn btn-primary">Add Another Restaurant</button>
                 </div>
             </form>

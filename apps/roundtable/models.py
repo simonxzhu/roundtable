@@ -91,6 +91,7 @@ class Event(models.Model):
     location = models.CharField(max_length=100)
     hosted_by = models.ForeignKey(User, related_name="host_events", on_delete=models.CASCADE)
     users_who_join = models.ManyToManyField(User, related_name="join_events")
+    message = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     objects = EventManager()
