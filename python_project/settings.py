@@ -25,7 +25,9 @@ SECRET_KEY = 'zhx=0%3r_=aq08)d_!w@min235(upa1+0-d&-*7&od%ovlm8rp'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['3.16.158.139', '127.0.0.1' ] # keep the quotes!
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")	# add this line at the bottom; don't replace any existing lines!
 
 
 # Application definition
@@ -137,3 +139,4 @@ googlemap_key = 'AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI'
 #     from .local_settings import *
 # except ImportError:
 #     pass
+

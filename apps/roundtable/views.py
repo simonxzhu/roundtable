@@ -344,7 +344,6 @@ def handle_invite(request, event_id):
             already_joined = False
         else:
             already_joined = True
-        return redirect(request, '/dashboard')
     else:
         user = None;
         already_joined = False
