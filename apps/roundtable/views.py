@@ -254,11 +254,13 @@ def link_restaurant(request, event_id):
     url_pattern = r'https://www.yelp.com/biz/(.+)'
     url1 = ""
     event = Event.objects.get(id=event_id)
+    rest = ""
     if form['rest']:
         try:
             rest = form['rest'].split("?")[0]
             url1 = re.search(url_pattern, rest).group(1)
         except AttributeError:
+            rest = ""
             print("url not found.. should have been caught by validator")
     # print(url1)
     new_rest = None
