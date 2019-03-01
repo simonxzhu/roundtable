@@ -1,16 +1,23 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block dashboard %}
+    <head>
+        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        {% load static %}
+        <script src="{% static 'roundtable/js/create.js' %}"></script>
+    </head>
+
     <body>
     <div class="mt-5">
+        <div id="randodiv"></div>
         <h1 class="m-3" style="color:#0C2E8A">Hello {{ user.first_name }}!</h1>
         {% if events %}
             <h2 class="m-3" style="color:#0C2E8A">Here are your upcoming events:</h2>
 
             {% for event in events %}
-                <div class="m-3 p-3 rounded-top wow fadeInBottom"
+                <div class="m-3 p-3 rounded-top wow fadeInRight"
                      style="background-image: url({{ event.restaurants.first.image_url }}); background-size:cover">
-                    <a data-toggle="collapse" href="#event{{ event.id }}">
+                    <a class="restaurant-header" data-toggle="collapse" href="#event{{ event.id }}">
                         <div class="m-3 p-1">
                             <div class="row">
                                 <h1 class="rounded p-2"
@@ -25,33 +32,34 @@
                     <div class="m-1 p-1 rounded-top collapse" id="event{{ event.id }}"
                          style="background: linear-gradient(to bottom, #50D8AF, #0C2E8A)">
                         <div class="p-3 rounded-top" style="background-color: #50D8AF">
-                            <table class="table">
+                            <table class="table table-striped table-small">
                                 <thead>
                                 <tr>
                                     <th></th>
                                     <th>Score</th>
                                     {% for guest in event.users_who_join.all %}
                                         {% if guest.id != user.id %}
-                                        <th>{{ guest.first_name }}</th>
+                                        <th class="d-none d-md-table-cell">{{ guest.first_name }}</th>
                                         {% endif %}
                                     {% endfor %}
                                     <th><span class="text-danger">{{ user.first_name }}</span></th>
 
                                 </tr>
                                 </thead>
-                                <tbody>
+                                <tbody >
                                 {% for rest in event.restaurants.all %}
-                                    <tr>
+                                    <tr class="wow fadeInLeft">
                                         <td>
-                                            <div style="background-image: url({{ rest.image_url }}); background-size:cover; max-width:18em; height:18em"
+                                            <div style="background-image: url({{ rest.photo2_url }}); background-size:cover; height:18em"
                                                  class="p-5">
-                                                <h1 class="text-white">{{ rest.name }}</h1>
+                                                <h3 class="rounded p-1"
+                                    style="color:#0C2E8A; background-color:#50D8AF; display:inline">{{ rest.name }}</h1>
                                             </div>
                                         </td>
-                                        <td><i class="far fa-thumbs-up fa-2x"></td>
+                                        <td class="rate-average"><i class="far fa-thumbs-up fa-2x"></td>
                                         {% for guest in event.users_who_join.all %}
                                             {% if guest.id != user.id %}
-                                            <td>
+                                            <td class="d-none d-md-table-cell"> 
                                                 {% for rating in guest.ratings.all %}
                                                     {% if rating.restaurant.id == rest.id %}
                                                         {{ rating.rating.1 }}
@@ -60,23 +68,22 @@
                                             </td>
                                             {% endif %}
                                         {% endfor %}
-                                        {#  <td><i class="far fa-thumbs-down fa-2x"></i></td>#}
                                         <td>
-                                            <a class="text-dark" href="#">
-                                                <i class="far fa-heart fa-2x mr-3"></i>
-                                            </a>
-                                            <a class="text-dark" href="#">
-                                                <i class="far fa-thumbs-up fa-2x mr-3"></i>
-                                            </a>
-                                            <a class="text-dark" href="#">
-                                                <i class="far fa-check-square fa-2x mr-3"></i>
-                                            </a>
-                                            <a class="text-dark" href="#">
-                                                <i class="far fa-thumbs-down fa-2x mr-3"></i>
-                                            </a>
-                                            <a class="text-dark" href="#">
-                                                <i class="fas fa-ban fa-2x mr-3"></i>
-                                            </a>
+                                            <button class="hidden rate-button" style="background: transparent; border: none !important; display: block; " value="{{rest.id}},{{user.id}},2">
+                                                <i class="far fa-heart fa-2x my-2"></i>
+                                            </button>
+                                            <button class="hidden rate-button" style="background: transparent; border: none !important; display: block;" value="{{rest.id}},{{user.id}},2">
+                                                <i class="far fa-thumbs-up fa-2x my-2"></i>
+                                            </button>
+                                            <button class="hidden rate-button" style="background: transparent; border: none !important; display: block;" value="{{rest.id}},{{user.id}},2">
+                                                <i class="far fa-check-square fa-2x my-2"></i>
+                                            </button>
+                                            <button class="hidden rate-button" style="background: transparent; border: none !important; display: block;" value="{{rest.id}},{{user.id}},2">
+                                                <i class="far fa-thumbs-down fa-2x my-2"></i>
+                                            </button>
+                                            <button class="hidden rate-button" style="background: transparent; border: none !important; display: block;" value="{{rest.id}},{{user.id}},2">
+                                                <i class="fas fa-ban fa-2x my-2"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -87,25 +94,25 @@
                                 <form action="/link_restaurant/{{ event.id }}" method="post">
                                     {% csrf_token %}
                                     <div class="form-row mb-2">
-                                        <input type="text" class="form-control col" name="rest" id="restaurant_url"
+                                        <input type="text" class="form-control col mb-2 mr-1" name="rest" id="restaurant_url"
                                                placeholder="Paste restaurant_url here"
                                                data-rule="minlen:4"
                                                data-msg="Please enter at least 8 chars of subject"/>
                                         <div class="validation"></div>
-                                        <button type="submit" class="btn btn-primary col-sm-2 ml-1">Suggest a Restaurant</button>
+                                        <button type="submit" class="btn btn-primary col-sm-2 mr-3 mb-2">Suggest a Restaurant</button>
                                         {% if event.hosted_by == user %}
-                                        <a href="/events/edit/{{ event.id }}" class="btn btn-primary col-sm-2 ml-3">Edit Event Details</a>
+                                        <a href="/events/edit/{{ event.id }}" class="btn btn-primary col-sm-2 mr-3 mb-2">Edit Event Details</a>
                                         {% endif %}
                                     </div>
                                 </form>
                                 <form action="/link_guest/{{ event.id }}" method="post">
                                     {% csrf_token %}
                                     <div class="form-row mb-2">
-                                        <input type="text" class="form-control col" name="guest_id" placeholder="user_id"/>
+                                        <input type="text" class="form-control col mb-2 mr-1" name="guest_id" placeholder="user_id"/>
                                         <div class="validation"></div>
-                                        <button type="submit" class="btn btn-primary col-sm-2 ml-1">Invite a friend</button>
+                                        <button type="submit" class="btn btn-primary col-sm-2 mr-3 mb-2">Invite a friend</button>
                                         {% if event.hosted_by == user %}
-                                        <a href="/process_delete/{{ event.id }}" class="btn btn-danger col-sm-2 ml-3">Cancel Event</a>
+                                        <a href="/process_delete/{{ event.id }}" class="btn btn-danger col-sm-2 mr-3 mb-2">Cancel Event</a>
                                         {% endif %}
                                     </div>
                                 </form>
@@ -119,6 +126,8 @@
                 </div>
                 </div>
             {% endfor %}
+        {% else %}
+            <h2 class="m-3" style="color:#0C2E8A">You have no upcoming events, how about <a href="/events/new" style="color:#50D8AF">creating one?</a></h2>
         {% endif %}
     </div>
     </body>

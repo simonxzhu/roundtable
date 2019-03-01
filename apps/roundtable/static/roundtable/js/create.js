@@ -13,6 +13,24 @@ $(document).ready(function () {
         $("#count").val(next);
     });
 
+    $(".rate-button").on('click', function(event) {
+        event.stopPropagation();
+        event.stopImmediatePropagation();
+        var val = $(this).val();
+        $(this).parent().children().removeClass('text-light')
+        $(this).toggleClass('text-light');
+        $.ajax({
+            url:'/process_vote',
+            type:"get",
+            data: {
+                'val': val,
+            },
+            success: function(res) {
+                $('#')
+            }
+        })
+        $('#randodiv').html(val);
+    });
 
     $("#search_rest").click(function(){
         var food_type = $('#food_type').val()
