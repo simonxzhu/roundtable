@@ -1,9 +1,10 @@
+
 <iframe id="google-map" width="100%" height="380" frameborder="0"
         style="border:0"
-        src="{{ googlemaps_url }}"
+        src="{{ request.session.search_url }}"
         allowfullscreen>
 </iframe>
-{% for rest in top_restaurants %}
+{% for rest in request.session.top_restaurants %}
     <div class="container-fluid yelp-restaurants">
         <div class="card">
             <img src="{{ rest.image_url }}" class="card-img-top" alt="...">

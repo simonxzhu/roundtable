@@ -30,7 +30,9 @@ $(document).ready(function () {
         })
     })
 
-    $(".add-with-url").click(function(e){
+    $(document).on('click', ".add-with-url", function(e){
+        console.log("printing printing")
+
         var rest_url = $(this).val()
         var addto = "#field" + next;
         next = next + 1;
@@ -41,9 +43,5 @@ $(document).ready(function () {
         $("#field" + next).attr('data-source',$(addto).attr('data-source'));
         $("#count").val(next);
     });
-    // $(".add-with-url").click(function(){
-    //     var rest_url = $(this).val()
-    //     console.log(rest_url)
-    // })
 });
 
