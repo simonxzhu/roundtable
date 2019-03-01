@@ -1,5 +1,5 @@
 from yelpapi import YelpAPI
-
+from python_project.settings import yelp_key, googlemap_key
 from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q, Avg
 from django.contrib import messages
@@ -134,7 +134,7 @@ def process_addevent(request):
                 rest_obj = Restaurant.objects.get(alias=url)
             except Restaurant.DoesNotExist:
                 print(f'Querying API for rest1 = {url}')
-                yelp_api = YelpAPI('MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+                yelp_api = YelpAPI(yelp_key)
 
                 r = yelp_api.business_query(id=url)
                 # pprint.pprint(r)
@@ -178,12 +178,11 @@ def process_search(request):
     form = request.GET
     # print(form)
     # googlemaps display
-    googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key=AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI&q={form['food_type']}+in+{form['location']}"
+    googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key={googlemap_key}&q={form['food_type']}+in+{form['location']}"
     request.session['search_url'] = googlemaps_url
     # print(googlemaps_url)
     # yelpapi call
-    yelp_api = YelpAPI(
-        'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+    yelp_api = YelpAPI(yelp_key)
     businesses = yelp_api.search_query(term=form['food_type'], location=form['location'], sort_by='rating', limit=5)['businesses']
     # shape the response (name, image_url, url)
     # pprint.pprint(businesses)
@@ -256,8 +255,7 @@ def link_restaurant(request, event_id):
             new_rest = Restaurant.objects.get(alias=url1)
         except Restaurant.DoesNotExist:
             print(f'Querying API for rest1 = {url1}')
-            yelp_api = YelpAPI(
-                'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+            yelp_api = YelpAPI(yelp_key)
 
             r = yelp_api.business_query(id=url1)
             pprint.pprint(r)
@@ -365,8 +363,7 @@ def process_update(request, event_id):
                 rest_obj = Restaurant.objects.get(alias=url)
             except Restaurant.DoesNotExist:
                 print(f'Querying API for rest1 = {url}')
-                yelp_api = YelpAPI(
-                    'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+                yelp_api = YelpAPI(yelp_key)
 
                 r = yelp_api.business_query(id=url)
                 pprint.pprint(r)

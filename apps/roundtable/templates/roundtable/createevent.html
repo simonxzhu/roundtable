@@ -102,8 +102,8 @@
                 {% if 'top_restaurants' in request.session %}
                     {% for rest in request.session.top_restaurants %}
                         <div class="container-fluid yelp-restaurants">
-                            <div class="card">
-                                <img src="{{ rest.image_url }}" class="card-img-top" alt="...">
+                            <div >
+                                <img src="{{ rest.image_url }}" class="card-img-top" alt="{{ rest.name }}" >
                                 <div class="card-body">
                                     <h5 class="card-title">{{ rest.name }}</h5>
                                     <a href="{{ rest.url }}" class="btn btn-primary" target="_blank">Check on yelp</a>

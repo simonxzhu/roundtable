@@ -131,7 +131,8 @@ STATIC_URL = '/static/'
 #
 # MEDIA_URL = '/media/'
 
-
+yelp_key = 'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx'
+googlemap_key = 'AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI'
 # try:
 #     from .local_settings import *
 # except ImportError:
