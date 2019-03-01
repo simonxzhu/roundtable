@@ -92,7 +92,7 @@
                                 <form action="/link_guest/{{ event.id }}" method="post">
                                     {% csrf_token %}
                                     <div class="form-row mb-2">
-                                        <input type="text" class="form-control col" name="guest_id" placeholder="user_id"/>
+                                        <input type="text" class="form-control col" name="guest_name" placeholder="firstname lastname"/>
                                         <div class="validation"></div>
                                         <button type="submit" class="btn btn-primary col-sm-2 ml-1">Invite a friend</button>
                                         {% if event.hosted_by == user %}
