@@ -65,17 +65,41 @@ icon_map = {
     (Ratings.Hate, "fa-ban"),
 }
 
+
 def dashboard(request):
     # if 'user_id' in request.session:
 
     user = User.objects.get(id=request.session['user_id'])
 
-    events = Event.objects.all().order_by('time')
+    events = Event.objects.filter(users_who_join__id__contains=user.id).order_by('time')
+    event_ratings = {}
+    for event in events:
+        eventid = str(event.id)
+        event_ratings[eventid] = {}
+        for rest in event.restaurants.all():
+            restid = str(rest.id)
+            sum_rating = 0
+            event_ratings[eventid][restid] = {}
+            for event_user in event.users_who_join.all():
+                try:
+                    user_rating = event_user.ratings.get(restaurant=rest).rating[1]
+                except:
+                    user_rating = 1
+                sum_rating += user_rating
+                if event_user.id == user.id:
+                    event_ratings[eventid][restid]["0"] = user_rating
+                else:
+                    event_ratings[eventid][restid][str(event_user.id)] = user_rating
+            event_ratings[eventid][restid]["-1"] = sum_rating/len(event_ratings)
+
+    pprint.pprint(event_ratings)
+
     context = {
         'user': user,
         'users': User.objects.all(),
         'events': events,
         'icon_map': icon_map,
+        'event_ratings': event_ratings,
     }
 
     return render(request, 'roundtable/dashboard.html', context)
@@ -98,7 +122,7 @@ def process_addevent(request):
         time=form['time'],
         location=form['location'],
         hosted_by=User.objects.get(id=request.session['user_id']),
-        )
+    )
 
     # XXX Add validations!
     # XX This is hardcoded to 3 restaurants, use jquery to do something smarter
@@ -150,10 +174,11 @@ def process_addevent(request):
                     # price=r['price']
                 )
             event.restaurants.add(rest_obj)
-            event.save()
         n += 1
         rest = 'rest' + str(n)
 
+    event.users_who_join.add(User.objects.get(id=request.session['user_id']))
+    event.save()
     return redirect("/dashboard")
 
 def process_delete(request, id):
