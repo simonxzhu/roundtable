@@ -66,19 +66,20 @@ icon_map = {
 }
 
 def dashboard(request):
-    # if 'user_id' in request.session:
+    if 'user_id' in request.session:
+        user = User.objects.get(id=request.session['user_id'])
+        events = Event.objects.all().order_by('time')
+        context = {
+            'user': user,
+            'users': User.objects.all(),
+            'events': events,
+            'icon_map': icon_map,
+        }
 
-    user = User.objects.get(id=request.session['user_id'])
+        return render(request, 'roundtable/dashboard.html', context)
 
-    events = Event.objects.all().order_by('time')
-    context = {
-        'user': user,
-        'users': User.objects.all(),
-        'events': events,
-        'icon_map': icon_map,
-    }
-
-    return render(request, 'roundtable/dashboard.html', context)
+    else:
+        return redirect('/')
 
 
 def createevent(request):
@@ -91,8 +92,15 @@ def createevent(request):
 
 
 def process_addevent(request):
-    form = request.POST
+    errors = Event.objects.basic_validator(request.POST)
+    if len(errors) > 0:
+        request.session['errors'] = errors
+        for key, value in errors.items():
+            messages.error(request, value, extra_tags=key)
+        return redirect('/events/new')
 
+    # if no errors
+    form = request.POST
     event = Event.objects.create(
         title=form['title'],
         time=form['time'],
@@ -155,6 +163,7 @@ def process_addevent(request):
         rest = 'rest' + str(n)
 
     return redirect("/dashboard")
+
 
 def process_delete(request, id):
     Event.objects.get(id=id).delete()

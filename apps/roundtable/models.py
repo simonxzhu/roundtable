@@ -61,6 +61,30 @@ class User(models.Model):
         return self.first_name
 
 
+class EventManager(models.Manager):
+    def basic_validator(self, postData):
+        errors = {}
+        print(postData['time'])
+        # add keys and values to errors dictionary for each invalid field
+        if len(postData['title']) < 2:
+            errors["title"] = "Title should be at least 2 characters."
+        if len(postData['location']) < 2:
+            errors["location"] = "Location should be at least 2 characters."
+
+        # postData['time'] returns 2019-02-13T13:00
+        if postData['time'] is "":
+            errors["time"] = "Time is required"
+        else:
+            event_time = postData['time']
+            current_time = datetime.now().isoformat()
+
+            if event_time < current_time:
+                errors["time"] = "Time should not be in the past."
+
+        return errors
+
+
+
 class Event(models.Model):
     title = models.CharField(max_length=100)
     time = models.DateTimeField()
@@ -69,6 +93,7 @@ class Event(models.Model):
     users_who_join = models.ManyToManyField(User, related_name="join_events")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    objects = EventManager()
 
     def __str__(self):
         return self.title
