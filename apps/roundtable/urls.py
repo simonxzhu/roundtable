@@ -14,5 +14,6 @@ urlpatterns = [
     url(r'^process_vote$', views.process_vote),
     url(r'^link_restaurant/(?P<event_id>\d+)$', views.link_restaurant),
     url(r'^link_guest/(?P<event_id>\d+)$', views.link_guest),
-
+    # url(r'^process_update/(?P<event_id>\d+)$', views.process_update),
+    url(r'^events/edit/(?P<event_id>\d+)$', views.editevent),
 ]

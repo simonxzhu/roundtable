@@ -122,6 +122,8 @@ def createevent(request):
 
 
 def process_addevent(request):
+    m = request.POST['message']
+    print("&"*50, m)
     errors = Event.objects.basic_validator(request.POST)
     if len(errors) > 0:
         request.session['errors'] = errors
@@ -135,6 +137,7 @@ def process_addevent(request):
         title=form['title'],
         time=form['time'],
         location=form['location'],
+        message=form['message'],
         hosted_by=User.objects.get(id=request.session['user_id']),
     )
 
@@ -332,3 +335,34 @@ def link_guest(request, event_id):
         print("Add user successfully")
         event.users_who_join.add(user)
         return redirect('/dashboard')
+
+
+def editevent(request, event_id):
+    event = Event.objects.get(id=event_id)
+    user = User.objects.get(id=request.session['user_id'])
+    context = {
+        'event': event,
+        'user': user
+    }
+
+    return render(request, 'roundtable/editevent.html', context)
+
+
+# def process_update(request, event_id):
+#     if request.method == "POST":
+#         errors = Event.objects.basic_validato(request.POST)
+#         if len(errors) > 0:
+#             request.session['errors'] = errors
+#             for key, value in errors.items():
+#                 messages.error(request, value, extra_tags=key)
+#
+#             return redirect(f"/events/edit/{event_id}")
+#         else:
+#             p = request.POST
+#             event = Event.objects.get(id=event_id)
+#             event.title = p['title']
+#             event.description = p['description']
+#             event.location = p['location']
+#             event.save()
+#
+#             return redirect('/dashboard')
