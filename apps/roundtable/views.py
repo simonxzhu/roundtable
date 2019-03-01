@@ -1,7 +1,7 @@
 from yelpapi import YelpAPI
 
 from django.shortcuts import render, redirect, HttpResponse
-from django.db.models import Q
+from django.db.models import Q, Avg
 from django.contrib import messages
 from django.utils import timezone
 
@@ -10,7 +10,7 @@ import pprint
 import re
 import bcrypt
 
-from .models import User, Event, Restaurant, Rating, Ratings
+from .models import User, Event, Restaurant, Rating
 
 
 def index(request):
@@ -57,13 +57,6 @@ def process_login(request):
             return redirect('/dashboard')
 
 
-icon_map = {
-    (Ratings.Love, "fa-heart"),
-    (Ratings.Like, "fa-thumps-up"),
-    (Ratings.Okay, "fa-check-square"),
-    (Ratings.Dislike, "fa-thumbs-down"),
-    (Ratings.Hate, "fa-ban"),
-}
 
 
 def dashboard(request):
@@ -74,39 +67,16 @@ def dashboard(request):
             'user': user,
             'users': User.objects.all(),
             'events': events,
-            'icon_map': icon_map,
         }
 
     user = User.objects.get(id=request.session['user_id'])
 
     events = Event.objects.filter(users_who_join__id__contains=user.id).order_by('time')
-    event_ratings = {}
-    for event in events:
-        eventid = str(event.id)
-        event_ratings[eventid] = {}
-        for rest in event.restaurants.all():
-            restid = str(rest.id)
-            sum_rating = 0
-            event_ratings[eventid][restid] = {}
-            for event_user in event.users_who_join.all():
-                try:
-                    user_rating = event_user.ratings.get(restaurant=rest).rating[1]
-                except:
-                    user_rating = 1
-                sum_rating += user_rating
-                if event_user.id == user.id:
-                    event_ratings[eventid][restid]["0"] = user_rating
-                else:
-                    event_ratings[eventid][restid][str(event_user.id)] = user_rating
-            event_ratings[eventid][restid]["-1"] = sum_rating/len(event_ratings)
-
-    pprint.pprint(event_ratings)
 
     context = {
         'user': user,
         'users': User.objects.all(),
         'events': events,
-        'icon_map': icon_map,
     }
     return render(request, 'roundtable/dashboard.html', context)
 
@@ -122,6 +92,8 @@ def createevent(request):
 
 
 def process_addevent(request):
+    m = request.POST['message']
+    # print("&"*50, m)
     errors = Event.objects.basic_validator(request.POST)
     if len(errors) > 0:
         request.session['errors'] = errors
@@ -155,7 +127,7 @@ def process_addevent(request):
             except AttributeError:
                 print("url not found.. should have been caught by validator")
                 url=""
-        print(url)
+        # print(url)
 
         if url != "":
             try:
@@ -165,7 +137,7 @@ def process_addevent(request):
                 yelp_api = YelpAPI('MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
 
                 r = yelp_api.business_query(id=url)
-                pprint.pprint(r)
+                # pprint.pprint(r)
                 photo1_url = ""
                 photo2_url = ""
                 photo3_url = ""
@@ -204,17 +176,17 @@ def process_delete(request, id):
 
 def process_search(request):
     form = request.GET
-    print(form)
+    # print(form)
     # googlemaps display
     googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key=AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI&q={form['food_type']}+in+{form['location']}"
     request.session['search_url'] = googlemaps_url
-    print(googlemaps_url)
+    # print(googlemaps_url)
     # yelpapi call
     yelp_api = YelpAPI(
         'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
     businesses = yelp_api.search_query(term=form['food_type'], location=form['location'], sort_by='rating', limit=5)['businesses']
     # shape the response (name, image_url, url)
-    pprint.pprint(businesses)
+    # pprint.pprint(businesses)
     restaurant = {}
     result = []
     for business in businesses:
@@ -232,6 +204,40 @@ def process_search(request):
     return render(request, 'roundtable/partials/rests_map.html', context)
 
 
+
+def process_vote(request):
+    form = request.GET
+    value = form['value']
+    cell = value.split(',')
+    rate = Rating.objects.filter(restaurant__id=cell[1], rater__id=cell[2])
+    if len(rate) < 1:
+        rate = Rating.objects.create(restaurant=Restaurant.objects.get(id=cell[1]), rater=User.objects.get(id=cell[2]), rating=cell[3])
+    else:
+        print(f"saving new rating {cell[3]}")
+        my_rate = rate.first()
+        my_rate.rating = cell[3]
+        my_rate.save()
+    all_ratings = Rating.objects.filter(restaurant__id=cell[1])
+    avg_query = all_ratings.all().aggregate(Avg('rating'))
+    average = avg_query['rating__avg']
+    average_icon = 'far fa-check-square'
+    if average > 1:
+        average_icon = 'far fa-heart'
+    elif average > 0:
+        average_icon = 'far fa-thumbs-up'
+    elif average > -1:
+        average_icon = 'far fa-check-square'
+    elif average > -2:
+        average_icon = 'far fa-thumbs-down'
+    else:
+        average_icon = 'fas fa-ban'
+    
+    context = {
+        'average': average_icon
+    }
+    return render(request, 'roundtable/partials/score.html', context)
+
+
 def link_restaurant(request, event_id):
     form = request.POST
     url_pattern = r'https://www.yelp.com/biz/(.+)'
@@ -243,7 +249,7 @@ def link_restaurant(request, event_id):
             url1 = re.search(url_pattern, rest).group(1)
         except AttributeError:
             print("url not found.. should have been caught by validator")
-    print(url1)
+    # print(url1)
     new_rest = None
     if rest != "":
         try:

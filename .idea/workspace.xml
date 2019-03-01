@@ -2,8 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b66bfff0-a6c7-4e14-a562-db624abed01d" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/createevent.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/createevent.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/partials/score.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/roundtable/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/migrations/0001_initial.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/roundtable/migrations/0002_auto_20190227_1333.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/roundtable/migrations/0003_event_message.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/roundtable/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/roundtable/static/roundtable/js/create.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/static/roundtable/js/create.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/dashboard.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/roundtable/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/roundtable/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/views.py" afterDir="false" />
     </list>
@@ -51,8 +56,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/roundtable/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="305">
-              <caret line="316" column="5" lean-forward="true" selection-start-line="316" selection-start-column="5" selection-end-line="316" selection-end-column="5" />
+            <state relative-caret-position="313">
+              <caret line="101" column="38" lean-forward="true" selection-start-line="101" selection-start-column="38" selection-end-line="101" selection-end-column="38" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -64,7 +69,7 @@
         <entry file="file://$PROJECT_DIR$/apps/roundtable/static/roundtable/js/create.js">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="311">
-              <caret line="36" column="43" lean-forward="true" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
+              <caret line="40" column="43" lean-forward="true" selection-start-line="40" selection-start-column="43" selection-end-line="40" selection-end-column="43" />
             </state>
           </provider>
         </entry>
@@ -81,8 +86,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="144">
-              <caret line="33" column="76" selection-start-line="33" selection-start-column="76" selection-end-line="33" selection-end-column="76" />
+            <state relative-caret-position="312">
+              <caret line="41" column="47" lean-forward="true" selection-start-line="41" selection-start-column="47" selection-end-line="41" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -91,7 +96,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>enter</find>
       <find>HEAD</find>
       <find>restaurant</find>
       <find>yelp_api.business_query</find>
@@ -121,6 +125,7 @@
       <find>p</find>
       <find>add</find>
       <find>{{ event.time.isoformat }}</find>
+      <find>Head</find>
     </findStrings>
     <replaceStrings>
       <replace>roundtable</replace>
@@ -325,12 +330,12 @@
       <workItem from="1551238085391" duration="567000" />
       <workItem from="1551238695957" duration="96000" />
       <workItem from="1551238823552" duration="5552000" />
-      <workItem from="1551454230324" duration="7862000" />
+      <workItem from="1551454230324" duration="8010000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83062000" />
+    <option name="totallyTimeSpent" value="83210000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -359,7 +364,7 @@
       <window_info anchor="bottom" id="Docker" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" weight="0.30743617" />
       <window_info anchor="bottom" id="Database Changes" order="10" show_stripe_button="false" weight="0.3284553" />
-      <window_info anchor="bottom" id="Terminal" order="11" weight="0.28087986" />
+      <window_info anchor="bottom" id="Terminal" order="11" weight="0.7817259" />
       <window_info anchor="bottom" id="Event Log" internal_type="SLIDING" order="12" sideWeight="0.21079692" side_tool="true" type="SLIDING" weight="0.37732658" />
       <window_info anchor="bottom" id="Python Console" order="13" weight="0.33840948" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -575,7 +580,7 @@
     <entry file="file://$PROJECT_DIR$/apps/roundtable/static/roundtable/js/create.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="311">
-          <caret line="36" column="43" lean-forward="true" selection-start-line="36" selection-start-column="43" selection-end-line="36" selection-end-column="43" />
+          <caret line="40" column="43" lean-forward="true" selection-start-line="40" selection-start-column="43" selection-end-line="40" selection-end-column="43" />
         </state>
       </provider>
     </entry>
@@ -588,15 +593,15 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="144">
-          <caret line="33" column="76" selection-start-line="33" selection-start-column="76" selection-end-line="33" selection-end-column="76" />
+        <state relative-caret-position="312">
+          <caret line="41" column="47" lean-forward="true" selection-start-line="41" selection-start-column="47" selection-end-line="41" selection-end-column="47" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/roundtable/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="305">
-          <caret line="316" column="5" lean-forward="true" selection-start-line="316" selection-start-column="5" selection-end-line="316" selection-end-column="5" />
+        <state relative-caret-position="313">
+          <caret line="101" column="38" lean-forward="true" selection-start-line="101" selection-start-column="38" selection-end-line="101" selection-end-column="38" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
           </folding>

@@ -125,20 +125,8 @@ class Restaurant(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
 
-class Ratings(Enum):
-    Love = 2
-    Like = 1
-    Okay = 0
-    Dislike = -1
-    Hate = -5
-
-
 class Rating(models.Model):
-    rating = models.CharField(
-        max_length = 5,
-        choices=[(tag, tag.value) for tag in Ratings], # choices is a list of tuple
-        default=Ratings.Okay
-    )
+    rating = models.IntegerField(default=0)
     rater = models.ForeignKey(User, related_name="ratings", on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, related_name="ratings", on_delete=models.CASCADE)
 

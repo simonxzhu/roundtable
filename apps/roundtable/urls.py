@@ -11,6 +11,7 @@ urlpatterns = [
     url(r'^process_addevent$', views.process_addevent),
     url(r'^process_delete/(?P<id>\d+)$', views.process_delete),
     url(r'^process_search$', views.process_search),
+    url(r'^process_vote$', views.process_vote),
     url(r'^link_restaurant/(?P<event_id>\d+)$', views.link_restaurant),
     url(r'^link_guest/(?P<event_id>\d+)$', views.link_guest),
     url(r'^process_update/(?P<event_id>\d+)$', views.process_update),
