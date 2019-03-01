@@ -171,10 +171,6 @@ def process_delete(request, id):
 
 
 def process_search(request):
-    if 'search_url' in request.session or 'top_restaurants' in request.session:
-        del request.session['search_url']
-        del request.session['top_restaurants']
-
     form = request.GET
     print(form)
     # googlemaps display
