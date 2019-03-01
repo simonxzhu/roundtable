@@ -5,11 +5,17 @@
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         {% load static %}
         <script src="{% static 'roundtable/js/create.js' %}"></script>
+        <style>
+            .btn-primary {
+                background-color: #0C2E8A;
+                color: #50D8AF;
+            }
+
+        </style>
     </head>
 
     <body>
     <div class="mt-5">
-        <div id="randodiv"></div>
         <h1 class="m-3" style="color:#0C2E8A">Hello {{ user.first_name }}!</h1>
         {% if events %}
             <h2 class="m-3" style="color:#0C2E8A">Here are your upcoming events:</h2>
@@ -53,10 +59,13 @@
                                             <div style="background-image: url({{ rest.image_url }}); background-size:cover; height:16em"
                                                  class="p-5">
                                                 <h3 class="rounded p-1"
-                                    style="color:#0C2E8A; background-color:#50D8AF; display:inline">{{ rest.name }}</h1>
+                                    style="color:#0C2E8A; background-color:#50D8AF; display:inline;">{{ rest.name }}</h3>
+                                                <br>
+                                                <br>
+                                                <a class="btn btn-danger"  target="_blank" href="{{rest.url}}">Check on Yelp</a>
                                             </div>
                                         </td>
-                                        <td id="rate-average-{{event.id}}-{{rest.id}}"><i class="far fa-thumbs-up fa-2x"></td>
+                                        <td id="rate-average-{{event.id}}-{{rest.id}}"></td>
                                         {% for guest in event.users_who_join.all %}
                                             {% if guest.id != user.id %}
                                             <td class="d-none d-md-table-cell"> 
@@ -125,13 +134,12 @@
                                         <input type="text" class="form-control col mb-2 mr-1" name="guest_name" placeholder="Enter your friend's name here"/>
                                         <div class="validation"></div>
                                         <button type="submit" class="btn btn-primary col-sm-2 mr-3 mb-2">Invite a friend</button>
+                                        <a href="/invite/{{ event.id }}" class="btn btn-primary col-sm-2 mr-3 mb-2">Get Invite Link</a>
                                         {% if event.hosted_by == user %}
                                         <a href="/process_delete/{{ event.id }}" class="btn btn-danger col-sm-2 mr-3 mb-2">Cancel Event</a>
                                         {% endif %}
                                     </div>
                                 </form>
-
-
                             </div>
 
                         </div>

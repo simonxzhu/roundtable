@@ -16,4 +16,6 @@ urlpatterns = [
     url(r'^link_guest/(?P<event_id>\d+)$', views.link_guest),
     # url(r'^process_update/(?P<event_id>\d+)$', views.process_update),
     url(r'^events/edit/(?P<event_id>\d+)$', views.editevent),
+    url(r'^invite/(?P<event_id>\d+)$', views.handle_invite),
+    url(r'^handle_accept/(?P<event_id>\d+)$', views.handle_accept),
 ]

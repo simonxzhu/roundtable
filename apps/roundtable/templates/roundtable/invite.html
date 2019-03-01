@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block login %}
+<head>
+    <style>
+        .h1, .h2 {color: #0C2E8A;}
+        .h1 {font-weight: 600;}
+        .btn {background-color: #0C2E8A; color: #50D8AF !important;}
+        .tagline {font-style: none; font-family: sans-serif}
+    </style>
+</head>
+<body>
+    <section id="intro">
+        <div class="intro-content">
+            <h2 class="tagline"><span style="text-decoration: none; color: orangered; font-family:Georgia, serif; font-style: italic">"Where should we eat?"</span><br>Simplified</h2>
+            {% if already_joined %}
+                <div class="h1 mb-5 wow fadeInUp">Share this link to invite friends to {{event.title}}</div>
+            {% else %}
+                <div class="h1 mb-5 wow fadeInUp">You have been invited to {{event.title}}!</div>
+            {% endif %}
+        </div>
+
+        <div id="intro-carousel" class="owl-carousel">
+            <div class="item" style="background-image: url('/static/img/intro-carousel/veggie.jpg');"></div>
+            <div class="item" style="background-image: url('/static/img/intro-carousel/sushi.jpg');"></div>
+            <div class="item" style="background-image: url('/static/img/intro-carousel/donuts.jpg');"></div>
+            <div class="item"
+                 style="background-image: url('/static/img/intro-carousel/korean-food.jpg');"></div>
+            <div class="item wow fadeInUp" style="background-image: url('/static/img/intro-carousel/russian-food.jpg');"></div>
+        </div>
+    </section>
+    {% if not already_joined %}
+        <a href="/handle_accept/{{event.id}}" class="btn btn-primary wow fadeInUp col-sm-4 offset-sm-4" style="position:relative; top: -3em; z-index:100; font-size: 20pt;">Click here to join!</a>
+    {%endif %}
+    }
+ </body>
+{% endblock %}

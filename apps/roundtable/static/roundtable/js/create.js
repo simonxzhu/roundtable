@@ -1,6 +1,9 @@
 $(document).ready(function () {
     //@naresh action dynamic childs
     var next = 1;
+
+
+
     $("#add-more").click(function(e){
         e.preventDefault();
         var addto = "#field" + next;
@@ -31,7 +34,6 @@ $(document).ready(function () {
                 var target_cell = '#rate-average-' + cell[0] + '-' + cell[1]
                 console.log(target_cell)
                 $(target_cell).html(res)
-                $('#randodiv').html(cell);
             }
         })
     });

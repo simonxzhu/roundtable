@@ -32,6 +32,12 @@ def process_register(request):
             user = User.objects.create(first_name=p['first_name'], last_name=p['last_name'],
                                        email=p['email'], password=hashedpw.decode())
             request.session['user_id'] = user.id
+            if 'invite_event' in request.session:
+                event_id = request.session['invite_event']
+                del request.session['invite_event']
+                event = Event.objects.get(id=event_id)
+                event.users_who_join.add(User.objects.get(id=request.session['user_id']))
+                event.save()
             return redirect('/dashboard')
 
 
@@ -54,6 +60,12 @@ def process_login(request):
             p = request.POST
             user = User.objects.filter(email=p['login_email'])[0]
             request.session['user_id'] = user.id
+            if 'invite_event' in request.session:
+                event_id = request.session['invite_event']
+                del request.session['invite_event']
+                event = Event.objects.get(id=event_id)
+                event.users_who_join.add(User.objects.get(id=request.session['user_id']))
+                event.save()
             return redirect('/dashboard')
 
 
@@ -322,6 +334,39 @@ def editevent(request, event_id):
     }
 
     return render(request, 'roundtable/editevent.html', context)
+
+
+def handle_invite(request, event_id):
+    event = Event.objects.get(id=event_id)
+    if 'user_id' in request.session:
+        user = User.objects.get(id=request.session['user_id'])
+        events = Event.objects.filter(users_who_join__id__contains=user.id)
+        if len(events) == 0:
+            already_joined = False
+        else:
+            already_joined = True
+        return redirect(request, '/dashboard')
+    else:
+        user = None;
+        already_joined = False
+
+    context = {
+        'event': event,
+        'user': user,
+        'already_joined': already_joined
+    }
+
+    return render(request, 'roundtable/invite.html', context)
+
+def handle_accept(request, event_id):
+    if 'user_id' in request.session:
+        event = Event.objects.get(id=event_id)
+        event.users_who_join.add(User.objects.get(id=request.session['user_id']))
+        event.save()
+        return redirect("/dashboard")
+    else:
+        request.session['invite_event'] = event_id
+        return redirect("/")
 
 
 # def process_update(request, event_id):
