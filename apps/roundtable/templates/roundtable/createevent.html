@@ -102,8 +102,8 @@
                 {% if 'top_restaurants' in request.session %}
                     {% for rest in request.session.top_restaurants %}
                         <div class="container-fluid yelp-restaurants">
-                            <div class="card">
-                                <img src="{{ rest.image_url }}" class="card-img-top" alt="...">
+                            <div >
+                                <img src="{{ rest.image_url }}" class="card-img-top" alt="{{ rest.name }}" >
                                 <div class="card-body">
                                     <h5 class="card-title">{{ rest.name }}</h5>
                                     <a href="{{ rest.url }}" class="btn btn-primary" target="_blank">Check on yelp</a>
@@ -116,21 +116,6 @@
             </div>
         </div>
     </div>
-    <script>
-        $(".add-with-url").click(function(e){
-        console.log("printing printing")
-
-        var rest_url = $(this).val()
-        var addto = "#field" + next;
-        next = next + 1;
-        var newIn = `<div id="field${next}"><div class="form-group" name="field${next}"><input type="text" class="form-control" name="rest${next}" value=${rest_url} data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject"/><div class="validation"></div></div></div>`
-        console.log(newIn);
-        var newInput = $(newIn);
-        $(addto).after(newInput);
-        $("#field" + next).attr('data-source',$(addto).attr('data-source'));
-        $("#count").val(next);
-    });
-    </script>
     </body>
 {% endblock %}
 

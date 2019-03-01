@@ -1,5 +1,5 @@
 from yelpapi import YelpAPI
-
+from python_project.settings import yelp_key, googlemap_key
 from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q, Avg
 from django.contrib import messages
@@ -146,7 +146,7 @@ def process_addevent(request):
                 rest_obj = Restaurant.objects.get(alias=url)
             except Restaurant.DoesNotExist:
                 print(f'Querying API for rest1 = {url}')
-                yelp_api = YelpAPI('MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+                yelp_api = YelpAPI(yelp_key)
 
                 r = yelp_api.business_query(id=url)
                 # pprint.pprint(r)
@@ -190,12 +190,11 @@ def process_search(request):
     form = request.GET
     # print(form)
     # googlemaps display
-    googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key=AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI&q={form['food_type']}+in+{form['location']}"
+    googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key={googlemap_key}&q={form['food_type']}+in+{form['location']}"
     request.session['search_url'] = googlemaps_url
     # print(googlemaps_url)
     # yelpapi call
-    yelp_api = YelpAPI(
-        'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+    yelp_api = YelpAPI(yelp_key)
     businesses = yelp_api.search_query(term=form['food_type'], location=form['location'], sort_by='rating', limit=5)['businesses']
     # shape the response (name, image_url, url)
     # pprint.pprint(businesses)
@@ -268,8 +267,7 @@ def link_restaurant(request, event_id):
             new_rest = Restaurant.objects.get(alias=url1)
         except Restaurant.DoesNotExist:
             print(f'Querying API for rest1 = {url1}')
-            yelp_api = YelpAPI(
-                'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
+            yelp_api = YelpAPI(yelp_key)
 
             r = yelp_api.business_query(id=url1)
             pprint.pprint(r)
@@ -330,7 +328,8 @@ def editevent(request, event_id):
     user = User.objects.get(id=request.session['user_id'])
     context = {
         'event': event,
-        'user': user
+        'user': user,
+        'time': event.time.isoformat("|", timespec='hours')
     }
 
     return render(request, 'roundtable/editevent.html', context)
@@ -369,21 +368,78 @@ def handle_accept(request, event_id):
         return redirect("/")
 
 
-# def process_update(request, event_id):
-#     if request.method == "POST":
-#         errors = Event.objects.basic_validato(request.POST)
-#         if len(errors) > 0:
-#             request.session['errors'] = errors
-#             for key, value in errors.items():
-#                 messages.error(request, value, extra_tags=key)
-#
-#             return redirect(f"/events/edit/{event_id}")
-#         else:
-#             p = request.POST
-#             event = Event.objects.get(id=event_id)
-#             event.title = p['title']
-#             event.description = p['description']
-#             event.location = p['location']
-#             event.save()
-#
-#             return redirect('/dashboard')
+
+def process_update(request, event_id):
+    errors = Event.objects.basic_validator(request.POST)
+    if len(errors) > 0:
+        request.session['errors'] = errors
+        for key, value in errors.items():
+            messages.error(request, value, extra_tags=key)
+        return redirect(f'/events/edit/{event_id}')
+
+    # if no errors
+    form = request.POST
+    event = Event.objects.get(id=event_id)
+    event.title = form['title']
+    event.time = form['time']
+    event.location = form['location']
+    event.hosted_by = event.hosted_by
+    event.message = form['message']
+    event.save()
+
+
+    url_pattern = r'https://www.yelp.com/biz/(.+)'
+    url = ""
+    n = 1
+    rest = 'rest' + str(n)
+    rest_obj = None
+    while rest in form:
+
+        if form[rest]:
+            try:
+                rest_url = form[rest].split("?")[0]
+                url = re.search(url_pattern, rest_url).group(1)
+            except AttributeError:
+                print("url not found.. should have been caught by validator")
+                url = ""
+        print(url)
+
+        if url != "":
+            try:
+                rest_obj = Restaurant.objects.get(alias=url)
+            except Restaurant.DoesNotExist:
+                print(f'Querying API for rest1 = {url}')
+                yelp_api = YelpAPI(yelp_key)
+
+                r = yelp_api.business_query(id=url)
+                pprint.pprint(r)
+                photo1_url = ""
+                photo2_url = ""
+                photo3_url = ""
+                if len(r['photos']) > 0:
+                    photo1_url = r['photos'][0]
+                if len(r['photos']) > 1:
+                    photo2_url = r['photos'][1]
+                if len(r['photos']) > 2:
+                    photo3_url = r['photos'][2]
+                rest_obj = Restaurant.objects.create(
+                    alias=r['alias'],
+                    name=r['name'],
+                    image_url=r['image_url'],
+                    url=r['url'],
+                    display_phone=r['display_phone'],
+                    review_count=r['review_count'],
+                    rating=r['rating'],
+                    photo1_url=photo1_url,
+                    photo2_url=photo2_url,
+                    photo3_url=photo3_url,
+                    # price=r['price']
+                )
+            event.restaurants.add(rest_obj)
+        n += 1
+        rest = 'rest' + str(n)
+
+    # event.users_who_join.add(User.objects.get(id=request.session['user_id']))
+    event.save()
+
+    return redirect("/dashboard")

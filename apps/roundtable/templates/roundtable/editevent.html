@@ -32,7 +32,8 @@
                 <div class="form-group row">
                     <label for="time" class="col-sm-3 col-form-label">Date</label>
                     <div class="col-sm-9">
-                        <input type="datetime-local" class="form-control" id="time" name="time" value="{{ event.time }}"
+                        <input type="datetime-local" class="form-control" id="time" name="time"
+                               value="{{ event.time|date:"Y-m-d" }}T{{ event.time|date:"H:i:s" }}"
                                autocomplete="off">
                         {% if messages %}
                             <div class="messages text-danger">
@@ -48,7 +49,8 @@
                 <div class="form-group row">
                     <label for="location" class="col-sm-3 col-form-label">Location</label>
                     <div class="col-sm-9">
-                        <input type="text" class="form-control" id="location" name="location" value="{{ event.location }}" autocomplete="off">
+                        <input type="text" class="form-control" id="location" name="location" autocomplete="off"
+                               value="{{ event.location }}">
                         {% if messages %}
                             <div class="messages text-danger">
                                 {% for message in messages %}
@@ -71,15 +73,14 @@
                             <div class="validation"></div>
                         </div>
                     </div>
-
                 </div>
+
                 <div class="form-group">
                     <textarea class="form-control" name="message" rows="5" data-rule="required"
-                              data-msg="Please write something for us" placeholder="Message"></textarea>
+                              data-msg="Please write something for us" placeholder="Message"
+                              name="message">{{ event.message }}</textarea>
                     <div class="validation"></div>
                 </div>
-
-
                 <div class="text-center">
                     <button type="submit" class="btn btn-success">Update Event</button>
                     <button id="add-more" name="add-more" class="btn btn-primary">Add Another Restaurant</button>
@@ -109,7 +110,9 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ rest.name }}</h5>
                                     <a href="{{ rest.url }}" class="btn btn-primary" target="_blank">Check on yelp</a>
-                                    <button name="add-more" class="add-with-url btn btn-primary" value="{{ rest.url }}">Add to list</button>
+                                    <button name="add-more" class="add-with-url btn btn-primary" value="{{ rest.url }}">
+                                        Add to list
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -118,21 +121,6 @@
             </div>
         </div>
     </div>
-    <script>
-        $(".add-with-url").click(function(e){
-        console.log("printing printing")
-
-        var rest_url = $(this).val()
-        var addto = "#field" + next;
-        next = next + 1;
-        var newIn = `<div id="field${next}"><div class="form-group" name="field${next}"><input type="text" class="form-control" name="rest${next}" value=${rest_url} data-rule="minlen:4" data-msg="Please enter at least 8 chars of subject"/><div class="validation"></div></div></div>`
-        console.log(newIn);
-        var newInput = $(newIn);
-        $(addto).after(newInput);
-        $("#field" + next).attr('data-source',$(addto).attr('data-source'));
-        $("#count").val(next);
-    });
-    </script>
     </body>
 {% endblock %}
 
