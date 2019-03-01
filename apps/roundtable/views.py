@@ -1,7 +1,7 @@
 from yelpapi import YelpAPI
 
 from django.shortcuts import render, redirect, HttpResponse
-from django.db.models import Q
+from django.db.models import Q, Avg
 from django.contrib import messages
 from django.utils import timezone
 
@@ -10,7 +10,7 @@ import pprint
 import re
 import bcrypt
 
-from .models import User, Event, Restaurant, Rating, Ratings
+from .models import User, Event, Restaurant, Rating
 
 
 def index(request):
@@ -57,13 +57,6 @@ def process_login(request):
             return redirect('/dashboard')
 
 
-icon_map = {
-    Ratings.Love, "fa-heart",
-    Ratings.Like, "fa-thumps-up",
-    Ratings.Okay, "fa-check-square",
-    Ratings.Dislike, "fa-thumbs-down",
-    Ratings.Hate, "fa-ban",
-}
 
 
 def dashboard(request):
@@ -74,39 +67,16 @@ def dashboard(request):
             'user': user,
             'users': User.objects.all(),
             'events': events,
-            'icon_map': icon_map,
         }
 
     user = User.objects.get(id=request.session['user_id'])
 
     events = Event.objects.filter(users_who_join__id__contains=user.id).order_by('time')
-    # event_ratings = {}
-    # for event in events:
-    #     eventid = str(event.id)
-    #     event_ratings[eventid] = {}
-    #     for rest in event.restaurants.all():
-    #         restid = str(rest.id)
-    #         sum_rating = 0
-    #         event_ratings[eventid][restid] = {}
-    #         for event_user in event.users_who_join.all():
-    #             try:
-    #                 user_rating = event_user.ratings.get(restaurant=rest).rating[1]
-    #             except:
-    #                 user_rating = 1
-    #             sum_rating += user_rating
-    #             if event_user.id == user.id:
-    #                 event_ratings[eventid][restid]["0"] = user_rating
-    #             else:
-    #                 event_ratings[eventid][restid][str(event_user.id)] = user_rating
-    #         event_ratings[eventid][restid]["-1"] = sum_rating/len(event_ratings)
-
-    # pprint.pprint(event_ratings)
 
     context = {
         'user': user,
         'users': User.objects.all(),
         'events': events,
-        'icon_map': icon_map,
     }
     return render(request, 'roundtable/dashboard.html', context)
 
@@ -123,7 +93,7 @@ def createevent(request):
 
 def process_addevent(request):
     m = request.POST['message']
-    print("&"*50, m)
+    # print("&"*50, m)
     errors = Event.objects.basic_validator(request.POST)
     if len(errors) > 0:
         request.session['errors'] = errors
@@ -234,31 +204,37 @@ def process_search(request):
     return render(request, 'roundtable/partials/rests_map.html', context)
 
 
-rating_reverse_map = {
-    "2": Ratings.Love,
-    "1": Ratings.Like,
-    "0": Ratings.Okay,
-    "-1": Ratings.Dislike,
-    "-5": Ratings.Hate,
-}
-
 
 def process_vote(request):
     form = request.GET
     value = form['value']
     cell = value.split(',')
-    print(cell[3])
-    new_rating = rating_reverse_map[str(cell[3])]
-    print(new_rating)
     rate = Rating.objects.filter(restaurant__id=cell[1], rater__id=cell[2])
     if len(rate) < 1:
-        rate = Rating.objects.create(restaurant=Restaurant.objects.get(id=cell[1]), rater=User.objects.get(id=cell[2]), rating=new_rating)
-
+        rate = Rating.objects.create(restaurant=Restaurant.objects.get(id=cell[1]), rater=User.objects.get(id=cell[2]), rating=cell[3])
+    else:
+        print(f"saving new rating {cell[3]}")
+        my_rate = rate.first()
+        my_rate.rating = cell[3]
+        my_rate.save()
+    all_ratings = Rating.objects.filter(restaurant__id=cell[1])
+    avg_query = all_ratings.all().aggregate(Avg('rating'))
+    average = avg_query['rating__avg']
+    average_icon = 'far fa-check-square'
+    if average > 1:
+        average_icon = 'far fa-heart'
+    elif average > 0:
+        average_icon = 'far fa-thumbs-up'
+    elif average > -1:
+        average_icon = 'far fa-check-square'
+    elif average > -2:
+        average_icon = 'far fa-thumbs-down'
+    else:
+        average_icon = 'fas fa-ban'
+    
     context = {
-        'average': 'fa-thumbs-down'
+        'average': average_icon
     }
-
-
     return render(request, 'roundtable/partials/score.html', context)
 
 
