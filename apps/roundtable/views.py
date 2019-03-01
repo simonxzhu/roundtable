@@ -290,9 +290,9 @@ def link_guest(request, event_id):
     full_name = request.POST['guest_name'].split(' ')
     event = Event.objects.get(id=event_id)
     if len(full_name) < 2:
-        user = User.objects.filter(first_name=full_name[0]).first()
+        user = User.objects.filter(first_name__iexact=full_name[0]).first()
     else:
-        user = User.objects.filter(first_name=full_name[0], last_name=full_name[1]).first()
+        user = User.objects.filter(first_name__iexact=full_name[0], last_name__iexact=full_name[1]).first()
 
     if user == None:
         print("User doesn't exist")
