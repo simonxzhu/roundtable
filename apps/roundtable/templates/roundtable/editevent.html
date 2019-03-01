@@ -31,8 +31,9 @@
                 </div>
                 <div class="form-group row">
                     <label for="time" class="col-sm-3 col-form-label">Date</label>
-                    <div class="col-sm-9">{{ event.time.isoformat }} {{ time }}
-                        <input type="datetime-local" class="form-control" id="time" name="time" value="{{ time }}"
+                    <div class="col-sm-9">
+                        <input type="datetime-local" class="form-control" id="time" name="time"
+                               value="{{ event.time|date:"Y-m-d" }}T{{ event.time|date:"H:i:s" }}"
                                autocomplete="off">
                         {% if messages %}
                             <div class="messages text-danger">

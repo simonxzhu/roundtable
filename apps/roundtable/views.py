@@ -319,7 +319,7 @@ def editevent(request, event_id):
     context = {
         'event': event,
         'user': user,
-        'time': event.time.isoformat(timespec='hours')
+        'time': event.time.isoformat("|", timespec='hours')
     }
 
     return render(request, 'roundtable/editevent.html', context)

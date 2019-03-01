@@ -2,14 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="b66bfff0-a6c7-4e14-a562-db624abed01d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/partials/score.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/migrations/0001_initial.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/migrations/0001_initial.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/migrations/0002_auto_20190227_1333.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/migrations/0003_event_message.py" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/static/roundtable/js/create.js" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/static/roundtable/js/create.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/dashboard.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/dashboard.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/apps/roundtable/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/apps/roundtable/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/apps/roundtable/views.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -53,11 +47,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/apps/roundtable/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="313">
-              <caret line="101" column="38" lean-forward="true" selection-start-line="101" selection-start-column="38" selection-end-line="101" selection-end-column="38" />
+            <state relative-caret-position="173">
+              <caret line="322" column="5" lean-forward="true" selection-start-line="322" selection-start-column="5" selection-end-line="322" selection-end-column="5" />
               <folding>
                 <element signature="e#0#27#0" expanded="true" />
               </folding>
@@ -74,20 +68,11 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="das://46c5d9c8-cde9-49e9-9398-0bcab952b041/schema/main/table/roundtable_event">
-          <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
-            <state>
-              <filtering enabled="true" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="312">
-              <caret line="41" column="47" lean-forward="true" selection-start-line="41" selection-start-column="47" selection-end-line="41" selection-end-column="47" />
+            <state relative-caret-position="418">
+              <caret line="33" column="64" selection-start-line="33" selection-start-column="64" selection-end-line="33" selection-end-column="64" />
             </state>
           </provider>
         </entry>
@@ -158,8 +143,8 @@
         <option value="$PROJECT_DIR$/apps/roundtable/models.py" />
         <option value="$PROJECT_DIR$/apps/roundtable/templates/roundtable/createevent.html" />
         <option value="$PROJECT_DIR$/apps/roundtable/urls.py" />
-        <option value="$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html" />
         <option value="$PROJECT_DIR$/apps/roundtable/views.py" />
+        <option value="$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html" />
       </list>
     </option>
   </component>
@@ -192,6 +177,13 @@
               <item name="roundtable" type="462c0819:PsiDirectoryNode" />
               <item name="apps" type="462c0819:PsiDirectoryNode" />
               <item name="roundtable" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="roundtable" type="b2602c69:ProjectViewProjectNode" />
+              <item name="roundtable" type="462c0819:PsiDirectoryNode" />
+              <item name="apps" type="462c0819:PsiDirectoryNode" />
+              <item name="roundtable" type="462c0819:PsiDirectoryNode" />
+              <item name="migrations" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="roundtable" type="b2602c69:ProjectViewProjectNode" />
@@ -330,12 +322,12 @@
       <workItem from="1551238085391" duration="567000" />
       <workItem from="1551238695957" duration="96000" />
       <workItem from="1551238823552" duration="5552000" />
-      <workItem from="1551454230324" duration="8010000" />
+      <workItem from="1551454230324" duration="10147000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="83210000" />
+    <option name="totallyTimeSpent" value="85347000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -577,13 +569,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/roundtable/static/roundtable/js/create.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="311">
-          <caret line="40" column="43" lean-forward="true" selection-start-line="40" selection-start-column="43" selection-end-line="40" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
     <entry file="das://46c5d9c8-cde9-49e9-9398-0bcab952b041/schema/main/table/roundtable_event">
       <provider selected="true" editor-type-id="com.intellij.database.editor.DatabaseTableFileEditorProvider">
         <state>
@@ -591,20 +576,27 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html">
+    <entry file="file://$PROJECT_DIR$/apps/roundtable/static/roundtable/js/create.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="312">
-          <caret line="41" column="47" lean-forward="true" selection-start-line="41" selection-start-column="47" selection-end-line="41" selection-end-column="47" />
+        <state relative-caret-position="311">
+          <caret line="40" column="43" lean-forward="true" selection-start-line="40" selection-start-column="43" selection-end-line="40" selection-end-column="43" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/apps/roundtable/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="313">
-          <caret line="101" column="38" lean-forward="true" selection-start-line="101" selection-start-column="38" selection-end-line="101" selection-end-column="38" />
+        <state relative-caret-position="173">
+          <caret line="322" column="5" lean-forward="true" selection-start-line="322" selection-start-column="5" selection-end-line="322" selection-end-column="5" />
           <folding>
             <element signature="e#0#27#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/apps/roundtable/templates/roundtable/editevent.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="418">
+          <caret line="33" column="64" selection-start-line="33" selection-start-column="64" selection-end-line="33" selection-end-column="64" />
         </state>
       </provider>
     </entry>
