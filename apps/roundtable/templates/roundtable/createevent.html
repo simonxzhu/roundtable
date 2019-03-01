@@ -5,6 +5,13 @@
         <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
         {% load static %}
         <script src="{% static 'roundtable/js/create.js' %}"></script>
+        <style>
+            .btn-primary {
+                background-color: #0C2E8A;
+                color: #50D8AF;
+            }
+
+        </style>
     </head>
 
     <body>
@@ -86,11 +93,12 @@
         </div>
 
         <div class="container d-inline-block col-sm-5">
-            <label for="food_type" class="col-sm-3 col-form-label">Food Type</label>
-            <div class="col-sm-9">
-                <input type="text" class="form-control" id="food_type" name="food_type" autocomplete="off">
-                <button type="button" class="btn btn-primary mt-3" id="search_rest">Search</button>
+
+            <div class="form-row">
+                <input type="text" class="form-control col-sm-9" id="food_type" name="food_type" autocomplete="off">
+                <button type="button" class="btn btn-primary col-sm-2 offset-sm-1" id="search_rest">Search</button>
             </div>
+            <label for="food_type" class="col-form-label offset-sm-1">What kind of food are you looking for?</label>
             <div class="container mt-5" id="rests_map">
                 {% if 'search_url' in request.session %}
                     <iframe id="google-map" width="100%" height="380" frameborder="0"
@@ -102,11 +110,11 @@
                 {% if 'top_restaurants' in request.session %}
                     {% for rest in request.session.top_restaurants %}
                         <div class="container-fluid yelp-restaurants">
-                            <div >
+                            <div class="card wow fadeInUp">
                                 <img src="{{ rest.image_url }}" class="card-img-top" alt="{{ rest.name }}" >
                                 <div class="card-body">
                                     <h5 class="card-title">{{ rest.name }}</h5>
-                                    <a href="{{ rest.url }}" class="btn btn-primary" target="_blank">Check on yelp</a>
+                                    <a href="{{ rest.url }}" class="btn btn-danger" target="_blank">Check on yelp</a>
                                     <button name="add-more" class="add-with-url btn btn-primary" value="{{ rest.url }}">Add to list</button>
                                 </div>
                             </div>

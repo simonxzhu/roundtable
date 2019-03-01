@@ -21,7 +21,7 @@
             <h2 class="m-3" style="color:#0C2E8A">Here are your upcoming events:</h2>
 
             {% for event in events %}
-                <div class="m-3 p-3 rounded-top wow fadeInRight"
+                <div class="m-3 p-3 rounded-top wow fadeInUp"
                      style="background-image: url({{ event.restaurants.first.image_url }}); background-size:cover">
                     <a class="restaurant-header" data-toggle="collapse" href="#event{{ event.id }}">
                         <div class="m-3 p-1">
@@ -54,7 +54,7 @@
                                 </thead>
                                 <tbody >
                                 {% for rest in event.restaurants.all %}
-                                    <tr class="wow fadeInLeft">
+                                    <tr class="wow fadeInUp">
                                         <td>
                                             <div style="background-image: url({{ rest.image_url }}); background-size:cover; height:16em"
                                                  class="p-5">
@@ -134,7 +134,7 @@
                                         <input type="text" class="form-control col mb-2 mr-1" name="guest_name" placeholder="Enter your friend's name here"/>
                                         <div class="validation"></div>
                                         <button type="submit" class="btn btn-primary col-sm-2 mr-3 mb-2">Invite a friend</button>
-                                        <a href="/invite/{{ event.id }}" class="btn btn-primary col-sm-2 mr-3 mb-2">Get Invite Link</a>
+                                        <a href="/invite/{{ event.id }}/{{ event.title }}" class="btn btn-primary col-sm-2 mr-3 mb-2">Get Invite Link</a>
                                         {% if event.hosted_by == user %}
                                         <a href="/process_delete/{{ event.id }}" class="btn btn-danger col-sm-2 mr-3 mb-2">Cancel Event</a>
                                         {% endif %}

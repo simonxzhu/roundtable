@@ -195,7 +195,7 @@ def process_search(request):
     # print(googlemaps_url)
     # yelpapi call
     yelp_api = YelpAPI(yelp_key)
-    businesses = yelp_api.search_query(term=form['food_type'], location=form['location'], sort_by='rating', limit=5)['businesses']
+    businesses = yelp_api.search_query(term=form['food_type'], location=form['location'], sort_by='rating', limit=10)['businesses']
     # shape the response (name, image_url, url)
     # pprint.pprint(businesses)
     restaurant = {}
