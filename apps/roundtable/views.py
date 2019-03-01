@@ -58,11 +58,11 @@ def process_login(request):
 
 
 icon_map = {
-    (Ratings.Love, "fa-heart"),
-    (Ratings.Like, "fa-thumps-up"),
-    (Ratings.Okay, "fa-check-square"),
-    (Ratings.Dislike, "fa-thumbs-down"),
-    (Ratings.Hate, "fa-ban"),
+    Ratings.Love, "fa-heart",
+    Ratings.Like, "fa-thumps-up",
+    Ratings.Okay, "fa-check-square",
+    Ratings.Dislike, "fa-thumbs-down",
+    Ratings.Hate, "fa-ban",
 }
 
 
@@ -80,27 +80,27 @@ def dashboard(request):
     user = User.objects.get(id=request.session['user_id'])
 
     events = Event.objects.filter(users_who_join__id__contains=user.id).order_by('time')
-    event_ratings = {}
-    for event in events:
-        eventid = str(event.id)
-        event_ratings[eventid] = {}
-        for rest in event.restaurants.all():
-            restid = str(rest.id)
-            sum_rating = 0
-            event_ratings[eventid][restid] = {}
-            for event_user in event.users_who_join.all():
-                try:
-                    user_rating = event_user.ratings.get(restaurant=rest).rating[1]
-                except:
-                    user_rating = 1
-                sum_rating += user_rating
-                if event_user.id == user.id:
-                    event_ratings[eventid][restid]["0"] = user_rating
-                else:
-                    event_ratings[eventid][restid][str(event_user.id)] = user_rating
-            event_ratings[eventid][restid]["-1"] = sum_rating/len(event_ratings)
+    # event_ratings = {}
+    # for event in events:
+    #     eventid = str(event.id)
+    #     event_ratings[eventid] = {}
+    #     for rest in event.restaurants.all():
+    #         restid = str(rest.id)
+    #         sum_rating = 0
+    #         event_ratings[eventid][restid] = {}
+    #         for event_user in event.users_who_join.all():
+    #             try:
+    #                 user_rating = event_user.ratings.get(restaurant=rest).rating[1]
+    #             except:
+    #                 user_rating = 1
+    #             sum_rating += user_rating
+    #             if event_user.id == user.id:
+    #                 event_ratings[eventid][restid]["0"] = user_rating
+    #             else:
+    #                 event_ratings[eventid][restid][str(event_user.id)] = user_rating
+    #         event_ratings[eventid][restid]["-1"] = sum_rating/len(event_ratings)
 
-    pprint.pprint(event_ratings)
+    # pprint.pprint(event_ratings)
 
     context = {
         'user': user,
@@ -154,7 +154,7 @@ def process_addevent(request):
             except AttributeError:
                 print("url not found.. should have been caught by validator")
                 url=""
-        print(url)
+        # print(url)
 
         if url != "":
             try:
@@ -164,7 +164,7 @@ def process_addevent(request):
                 yelp_api = YelpAPI('MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
 
                 r = yelp_api.business_query(id=url)
-                pprint.pprint(r)
+                # pprint.pprint(r)
                 photo1_url = ""
                 photo2_url = ""
                 photo3_url = ""
@@ -203,17 +203,17 @@ def process_delete(request, id):
 
 def process_search(request):
     form = request.GET
-    print(form)
+    # print(form)
     # googlemaps display
     googlemaps_url = f"https://www.google.com/maps/embed/v1/search?key=AIzaSyAaduuGxiWech24CbaFGc1OoHEt10Kr9fI&q={form['food_type']}+in+{form['location']}"
     request.session['search_url'] = googlemaps_url
-    print(googlemaps_url)
+    # print(googlemaps_url)
     # yelpapi call
     yelp_api = YelpAPI(
         'MC6wAGZjDLn5g6voWircN7C5T2nUmO39cxHDteSV-RTOsrDi7od0jgX_yEmjVfeVvfoss9VvNJfXHSiAO10PeKrl0fsStcap41hghJynCziWLYF_u21VgSP4g5d1XHYx')
     businesses = yelp_api.search_query(term=form['food_type'], location=form['location'], sort_by='rating', limit=5)['businesses']
     # shape the response (name, image_url, url)
-    pprint.pprint(businesses)
+    # pprint.pprint(businesses)
     restaurant = {}
     result = []
     for business in businesses:
@@ -231,6 +231,34 @@ def process_search(request):
     return render(request, 'roundtable/partials/rests_map.html', context)
 
 
+rating_reverse_map = {
+    "2": Ratings.Love,
+    "1": Ratings.Like,
+    "0": Ratings.Okay,
+    "-1": Ratings.Dislike,
+    "-5": Ratings.Hate,
+}
+
+
+def process_vote(request):
+    form = request.GET
+    value = form['value']
+    cell = value.split(',')
+    print(cell[3])
+    new_rating = rating_reverse_map[str(cell[3])]
+    print(new_rating)
+    rate = Rating.objects.filter(restaurant__id=cell[1], rater__id=cell[2])
+    if len(rate) < 1:
+        rate = Rating.objects.create(restaurant=Restaurant.objects.get(id=cell[1]), rater=User.objects.get(id=cell[2]), rating=new_rating)
+
+    context = {
+        'average': 'fa-thumbs-down'
+    }
+
+
+    return render(request, 'roundtable/partials/score.html', context)
+
+
 def link_restaurant(request, event_id):
     form = request.POST
     url_pattern = r'https://www.yelp.com/biz/(.+)'
@@ -242,7 +270,7 @@ def link_restaurant(request, event_id):
             url1 = re.search(url_pattern, rest).group(1)
         except AttributeError:
             print("url not found.. should have been caught by validator")
-    print(url1)
+    # print(url1)
     new_rest = None
     if rest != "":
         try:

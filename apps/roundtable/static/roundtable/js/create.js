@@ -16,20 +16,24 @@ $(document).ready(function () {
     $(".rate-button").on('click', function(event) {
         event.stopPropagation();
         event.stopImmediatePropagation();
-        var val = $(this).val();
+        var value = $(this).val();
+        cell = value.split(',')
+        console.log(cell)
         $(this).parent().children().removeClass('text-light')
         $(this).toggleClass('text-light');
         $.ajax({
             url:'/process_vote',
             type:"get",
             data: {
-                'val': val,
+                'value': value,
             },
             success: function(res) {
-                $('#')
+                var target_cell = '#rate-average-' + cell[0] + '-' + cell[1]
+                console.log(target_cell)
+                $(target_cell).html(res)
+                $('#randodiv').html(cell);
             }
         })
-        $('#randodiv').html(val);
     });
 
     $("#search_rest").click(function(){
